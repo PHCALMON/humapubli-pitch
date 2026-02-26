@@ -1,0 +1,1467 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HUMAPUBLI — Pitch Deck</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Montserrat:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --bg-card: #141414;
+    --bg-card-hover: #1a1a1a;
+    --border: #222;
+    --border-accent: #333;
+    --text: #f5f5f5;
+    --text-muted: #888;
+    --text-dim: #555;
+    --accent: #c8ff00;
+    --accent-dim: #a3cc00;
+    --accent-glow: rgba(200, 255, 0, 0.15);
+    --red: #ff4444;
+    --red-dim: rgba(255, 68, 68, 0.15);
+    --green: #00e676;
+    --green-dim: rgba(0, 230, 118, 0.15);
+    --blue: #448aff;
+    --blue-dim: rgba(68, 138, 255, 0.15);
+    --orange: #ff9100;
+    --orange-dim: rgba(255, 145, 0, 0.15);
+    --purple: #b388ff;
+    --purple-dim: rgba(179, 136, 255, 0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-snap-type: y mandatory;
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ── Navigation ── */
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background: rgba(10, 10, 10, 0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  nav .logo {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+    font-size: 1.3rem;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, #ff6b9d, #c850c0, #ff6b35);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  nav .logo span {
+    font-weight: 600;
+  }
+
+  nav .nav-links {
+    display: flex;
+    gap: 1.5rem;
+    list-style: none;
+  }
+
+  nav .nav-links a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    transition: color 0.2s;
+  }
+
+  nav .nav-links a:hover { color: var(--accent); }
+
+  /* ── Sections ── */
+  section {
+    min-height: 100vh;
+    scroll-snap-align: start;
+    padding: 7rem 2rem 4rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  section.full-bleed {
+    max-width: 100%;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  section.full-bleed > .inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  /* ── Typography ── */
+  .section-label {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .section-label::before {
+    content: '';
+    display: block;
+    width: 24px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.04em;
+    margin-bottom: 1.5rem;
+  }
+
+  h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    margin-bottom: 1rem;
+  }
+
+  h3 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.5rem;
+  }
+
+  .subtitle {
+    font-size: 1.2rem;
+    color: var(--text-muted);
+    max-width: 600px;
+    line-height: 1.7;
+  }
+
+  .highlight { color: var(--accent); }
+  .strikethrough { text-decoration: line-through; color: var(--text-dim); }
+
+  /* ── Hero ── */
+  #hero {
+    text-align: center;
+    align-items: center;
+  }
+
+  #hero h1 {
+    font-size: clamp(3rem, 8vw, 6.5rem);
+    max-width: 900px;
+  }
+
+  #hero .subtitle {
+    max-width: 650px;
+    font-size: 1.3rem;
+    margin-bottom: 3rem;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--accent-glow);
+    border: 1px solid rgba(200, 255, 0, 0.3);
+    border-radius: 100px;
+    padding: 0.5rem 1.25rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .hero-badge::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  /* ── Stats Row ── */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  .stat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 2rem;
+    text-align: center;
+    transition: all 0.3s;
+  }
+
+  .stat-card:hover {
+    border-color: var(--border-accent);
+    transform: translateY(-2px);
+  }
+
+  .stat-number {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--accent);
+    letter-spacing: -0.03em;
+  }
+
+  .stat-label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-top: 0.25rem;
+  }
+
+  .stat-source {
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    margin-top: 0.5rem;
+    font-style: italic;
+  }
+
+  /* ── Comparison ── */
+  .comparison {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 2rem;
+    align-items: stretch;
+    margin-top: 2rem;
+  }
+
+  .comparison-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .comparison-card.old {
+    border-color: rgba(255, 68, 68, 0.3);
+  }
+
+  .comparison-card.old::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--red);
+  }
+
+  .comparison-card.new {
+    border-color: rgba(200, 255, 0, 0.3);
+  }
+
+  .comparison-card.new::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--accent);
+  }
+
+  .comparison-card h3 {
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .comparison-vs {
+    display: flex;
+    align-items: center;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 800;
+    font-size: 1.5rem;
+    color: var(--text-dim);
+  }
+
+  .comparison-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.9rem;
+  }
+
+  .comparison-item:last-child { border-bottom: none; }
+
+  .comparison-icon {
+    font-size: 1rem;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  /* ── Flow Steps ── */
+  .flow-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  .flow-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 2rem;
+    position: relative;
+    transition: all 0.3s;
+  }
+
+  .flow-card:hover {
+    border-color: var(--accent);
+    background: var(--bg-card-hover);
+  }
+
+  .flow-number {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--accent);
+    opacity: 0.3;
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+    line-height: 1;
+  }
+
+  .flow-card h3 { margin-bottom: 0.75rem; }
+
+  .flow-card p {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  .flow-tag {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 100px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-top: 1rem;
+  }
+
+  .flow-tag.brand { background: var(--blue-dim); color: var(--blue); }
+  .flow-tag.creator { background: var(--purple-dim); color: var(--purple); }
+  .flow-tag.platform { background: var(--accent-glow); color: var(--accent); }
+
+  /* ── Revenue Model ── */
+  .revenue-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  .revenue-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 2rem;
+  }
+
+  .revenue-card .revenue-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .revenue-card .revenue-icon.green { background: var(--green-dim); }
+  .revenue-card .revenue-icon.blue { background: var(--blue-dim); }
+  .revenue-card .revenue-icon.orange { background: var(--orange-dim); }
+  .revenue-card .revenue-icon.purple { background: var(--purple-dim); }
+
+  .revenue-detail {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-top: 0.5rem;
+    line-height: 1.6;
+  }
+
+  /* ── Unit Economics ── */
+  .economics-box {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 3rem;
+    margin-top: 2rem;
+    display: grid;
+    grid-template-columns: 1fr 1px 1fr;
+    gap: 3rem;
+  }
+
+  .economics-divider {
+    background: var(--border);
+  }
+
+  .economics-side h3 {
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .econ-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.9rem;
+  }
+
+  .econ-row:last-child { border-bottom: none; }
+
+  .econ-row .label { color: var(--text-muted); }
+  .econ-row .value { font-weight: 600; font-family: 'Space Grotesk', sans-serif; }
+  .econ-row .value.accent { color: var(--accent); }
+  .econ-row .value.green { color: var(--green); }
+  .econ-row .value.red { color: var(--red); }
+
+  .econ-highlight {
+    background: var(--accent-glow);
+    border: 1px solid rgba(200, 255, 0, 0.2);
+    border-radius: 12px;
+    padding: 1.25rem;
+    margin-top: 1.5rem;
+    text-align: center;
+  }
+
+  .econ-highlight .big-number {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--accent);
+  }
+
+  .econ-highlight .big-label {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: 0.25rem;
+  }
+
+  /* ── GTM Timeline ── */
+  .timeline {
+    margin-top: 2rem;
+    position: relative;
+    padding-left: 3rem;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 11px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--accent), var(--blue), var(--purple), var(--orange));
+  }
+
+  .timeline-item {
+    position: relative;
+    margin-bottom: 3rem;
+  }
+
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -3rem;
+    top: 6px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid var(--accent);
+    background: var(--bg);
+  }
+
+  .timeline-item:nth-child(2)::before { border-color: var(--blue); }
+  .timeline-item:nth-child(3)::before { border-color: var(--purple); }
+  .timeline-item:nth-child(4)::before { border-color: var(--orange); }
+
+  .timeline-phase {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: 0.25rem;
+  }
+
+  .timeline-phase.p1 { color: var(--accent); }
+  .timeline-phase.p2 { color: var(--blue); }
+  .timeline-phase.p3 { color: var(--purple); }
+  .timeline-phase.p4 { color: var(--orange); }
+
+  .timeline-item h3 { font-size: 1.2rem; margin-bottom: 0.5rem; }
+
+  .timeline-item p {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  .timeline-metrics {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .timeline-metric {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  .timeline-metric .val {
+    font-weight: 600;
+    color: var(--text);
+    font-family: 'Space Grotesk', sans-serif;
+  }
+
+  /* ── Moat / Differentials ── */
+  .moat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.25rem;
+    margin-top: 2rem;
+  }
+
+  .moat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.75rem;
+    transition: all 0.3s;
+  }
+
+  .moat-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+
+  .moat-icon {
+    font-size: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .moat-card p {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  /* ── CTA Section ── */
+  #cta {
+    text-align: center;
+    align-items: center;
+  }
+
+  #cta h2 {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    max-width: 700px;
+  }
+
+  .cta-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem 2rem;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s;
+    cursor: pointer;
+    border: none;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #000;
+  }
+
+  .btn-primary:hover {
+    background: #deff33;
+    transform: translateY(-1px);
+  }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border-accent);
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  /* ── Risks ── */
+  .risks-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.25rem;
+    margin-top: 2rem;
+  }
+
+  .risk-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.75rem;
+  }
+
+  .risk-card .risk-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .risk-card .risk-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 0.2rem 0.6rem;
+    border-radius: 100px;
+  }
+
+  .risk-label.mitigated { background: var(--green-dim); color: var(--green); }
+  .risk-label.managed { background: var(--orange-dim); color: var(--orange); }
+
+  .risk-card p {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  .risk-card .mitigation {
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.8rem;
+    color: var(--green);
+  }
+
+  /* ── Quote Block ── */
+  .quote-block {
+    background: var(--bg-card);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 12px 12px 0;
+    padding: 2rem 2.5rem;
+    margin: 2rem 0;
+    font-size: 1.1rem;
+    font-style: italic;
+    color: var(--text-muted);
+    line-height: 1.8;
+  }
+
+  .quote-block .author {
+    font-style: normal;
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    margin-top: 0.75rem;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    nav .nav-links { display: none; }
+    section { padding: 5rem 1.25rem 3rem; }
+    .comparison { grid-template-columns: 1fr; gap: 1rem; }
+    .comparison-vs { justify-content: center; }
+    .economics-box { grid-template-columns: 1fr; }
+    .economics-divider { height: 1px; width: 100%; }
+  }
+
+  /* ── Confidential footer ── */
+  .confidential {
+    text-align: center;
+    padding: 3rem 2rem;
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    border-top: 1px solid var(--border);
+  }
+
+  /* ── Persona cards ── */
+  .persona-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  .persona-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 2rem;
+  }
+
+  .persona-card .persona-tag {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 0.25rem 0.75rem;
+    border-radius: 100px;
+    display: inline-block;
+    margin-bottom: 1rem;
+  }
+
+  .persona-tag.brand-tag { background: var(--blue-dim); color: var(--blue); }
+  .persona-tag.creator-tag { background: var(--purple-dim); color: var(--purple); }
+
+  .persona-pain {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+    margin-top: 0.5rem;
+  }
+
+  .persona-pain li {
+    margin-bottom: 0.4rem;
+    list-style: none;
+    padding-left: 1.25rem;
+    position: relative;
+  }
+
+  .persona-pain li::before {
+    content: '>';
+    position: absolute;
+    left: 0;
+    color: var(--text-dim);
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+  }
+
+  /* ── Landscape Table ── */
+  .landscape-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 2rem;
+    font-size: 0.85rem;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+
+  .landscape-table thead th {
+    background: var(--bg-card);
+    padding: 1rem 1.25rem;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .landscape-table tbody td {
+    padding: 0.85rem 1.25rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-muted);
+  }
+
+  .landscape-table tbody tr:last-child td { border-bottom: none; }
+
+  .landscape-table tbody tr:hover { background: var(--bg-card); }
+
+  .landscape-table .cm-row {
+    background: var(--accent-glow) !important;
+  }
+
+  .landscape-table .cm-row td {
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  .check { color: var(--green); }
+  .cross { color: var(--red); opacity: 0.6; }
+  .partial { color: var(--orange); }
+</style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav>
+  <div class="logo">huma<span>Publi</span></div>
+  <ul class="nav-links">
+    <li><a href="#problema">Problema</a></li>
+    <li><a href="#solucao">Solucao</a></li>
+    <li><a href="#como-funciona">Como Funciona</a></li>
+    <li><a href="#revenue">Revenue</a></li>
+    <li><a href="#mercado">Mercado</a></li>
+    <li><a href="#gtm">Go-to-Market</a></li>
+    <li><a href="#moat">Moat</a></li>
+  </ul>
+</nav>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- SLIDE 1 — HERO                         -->
+<!-- ═══════════════════════════════════════ -->
+<section id="hero">
+  <div class="hero-badge">Confidencial &mdash; Fev 2026</div>
+  <div style="font-family: 'Montserrat', sans-serif; font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 800; letter-spacing: -0.02em; margin-bottom: 1rem; background: linear-gradient(135deg, #ff6b9d, #c850c0, #ff6b35); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">huma<span style="font-weight: 600;">Publi</span></div>
+  <h1>A <span class="highlight">Bolsa de Valores</span> da Atenção</h1>
+  <p class="subtitle">Uma plataforma onde creators investem em marcas, produzem conteúdo autêntico e são recompensados pelo resultado. A marca só paga se funcionar.</p>
+  <div class="cta-actions">
+    <a href="#problema" class="btn btn-primary">Ver o Pitch &darr;</a>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- SLIDE 2 — O PROBLEMA                   -->
+<!-- ═══════════════════════════════════════ -->
+<section id="problema">
+  <div class="section-label">O Problema</div>
+  <h2>A publicidade tradicional <span class="highlight">morreu</span>.<br>Só não avisaram as agências.</h2>
+  <p class="subtitle">O modelo de sempre: contratar celebridade + produção cara + tráfego pago. O resultado? Dedo no skip e dinheiro queimado.</p>
+
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-number">65%</div>
+      <div class="stat-label">dos usuários pulam ads<br>em menos de 5 segundos</div>
+      <div class="stat-source">Fonte: IPG Media Lab / YuMe</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">R$35bi</div>
+      <div class="stat-label">gastos em digital ads<br>no Brasil em 2025</div>
+      <div class="stat-source">Fonte: IAB Brasil</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">92%</div>
+      <div class="stat-label">confiam em recomendações<br>de pessoas reais vs. ads</div>
+      <div class="stat-source">Fonte: Nielsen Trust Report</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">4.6x</div>
+      <div class="stat-label">mais engajamento em<br>conteúdo orgânico vs. pago</div>
+      <div class="stat-source">Fonte: Stackla / Nosto</div>
+    </div>
+  </div>
+
+  <div class="quote-block">
+    "As pessoas não odeiam propaganda. Elas odeiam propaganda <strong>ruim</strong>. Quando alguém que você admira fala de algo que funciona, você presta atenção."
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- SLIDE 3 — OLD vs NEW                   -->
+<!-- ═══════════════════════════════════════ -->
+<section id="versus">
+  <div class="section-label">Mudança de Paradigma</div>
+  <h2>O jogo <span class="highlight">mudou</span>.</h2>
+
+  <div class="comparison">
+    <div class="comparison-card old">
+      <h3 style="color: var(--red);">Modelo Antigo</h3>
+      <div class="comparison-item"><span class="comparison-icon">&#x2717;</span> Contrata celebridade (R$200K-5M)</div>
+      <div class="comparison-item"><span class="comparison-icon">&#x2717;</span> Produção pesada (R$50K-500K)</div>
+      <div class="comparison-item"><span class="comparison-icon">&#x2717;</span> Tráfego pago massivo (R$100K+/mês)</div>
+      <div class="comparison-item"><span class="comparison-icon">&#x2717;</span> Paga upfront, torce pelo resultado</div>
+      <div class="comparison-item"><span class="comparison-icon">&#x2717;</span> 1 peça de conteúdo por campanha</div>
+      <div class="comparison-item"><span class="comparison-icon">&#x2717;</span> Parece propaganda &rarr; skip</div>
+    </div>
+
+    <div class="comparison-vs">VS</div>
+
+    <div class="comparison-card new">
+      <h3 style="color: var(--accent);">HUMAPUBLI</h3>
+      <div class="comparison-item"><span class="comparison-icon" style="color:var(--accent);">&#x2713;</span> Milhares de creators reais</div>
+      <div class="comparison-item"><span class="comparison-icon" style="color:var(--accent);">&#x2713;</span> Produção nativa (celular é o estúdio)</div>
+      <div class="comparison-item"><span class="comparison-icon" style="color:var(--accent);">&#x2713;</span> Distribuição orgânica via creators</div>
+      <div class="comparison-item"><span class="comparison-icon" style="color:var(--accent);">&#x2713;</span> Paga APENAS pelo resultado</div>
+      <div class="comparison-item"><span class="comparison-icon" style="color:var(--accent);">&#x2713;</span> Centenas de peças por campanha</div>
+      <div class="comparison-item"><span class="comparison-icon" style="color:var(--accent);">&#x2713;</span> Parece conteúdo real &rarr; engajamento</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- SLIDE 4 — A SOLUÇÃO                    -->
+<!-- ═══════════════════════════════════════ -->
+<section id="solucao">
+  <div class="section-label">A Solução</div>
+  <h2>HUMAPUBLI:<br><span class="highlight">Invista em marcas.<br>Crie conteúdo. Lucre.</span></h2>
+  <p class="subtitle" style="margin-bottom: 2rem;">Um marketplace onde creators compram cotas de campanhas de marcas, produzem conteúdo autêntico e ganham recompensas proporcionais ao desempenho.</p>
+
+  <div class="persona-grid">
+    <div class="persona-card">
+      <span class="persona-tag brand-tag">Para Marcas</span>
+      <h3>Publicidade sem risco</h3>
+      <ul class="persona-pain">
+        <li>Cria uma campanha com briefing + budget + métricas de sucesso</li>
+        <li>Define quantas cotas e o preço de cada</li>
+        <li>Recebe centenas de conteúdos autênticos de creators reais</li>
+        <li>Paga recompensa APENAS proporcionalmente aos resultados</li>
+        <li>Conteúdo pode ser reaproveitado como UGC em ads</li>
+      </ul>
+    </div>
+    <div class="persona-card">
+      <span class="persona-tag creator-tag">Para Creators</span>
+      <h3>Monetize seu conteúdo</h3>
+      <ul class="persona-pain">
+        <li>Navega campanhas disponíveis e escolhe marcas com fit</li>
+        <li>Compra uma cota (R$15-50) como compromisso</li>
+        <li>Cria conteúdo do jeito dele — autêntico, criativo, viral</li>
+        <li>Quanto melhor a performance, maior a recompensa</li>
+        <li>Top creators constroem reputação e atraem mais campanhas</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- SLIDE 5 — COMO FUNCIONA                -->
+<!-- ═══════════════════════════════════════ -->
+<section id="como-funciona">
+  <div class="section-label">Como Funciona</div>
+  <h2>Simples para todo mundo.<br><span class="highlight">Poderoso nos bastidores.</span></h2>
+
+  <div class="flow-grid">
+    <div class="flow-card">
+      <div class="flow-number">01</div>
+      <h3>Marca cria campanha</h3>
+      <p>Define o briefing (produto, mensagem, do's & don'ts), budget total, número de cotas, e as métricas que definem sucesso (views, cliques, vendas).</p>
+      <span class="flow-tag brand">Marca</span>
+    </div>
+    <div class="flow-card">
+      <div class="flow-number">02</div>
+      <h3>Creator compra cota</h3>
+      <p>Navega campanhas ativas, avalia o potencial e compra uma cota (R$15-50). A cota funciona como depósito de compromisso — skin in the game.</p>
+      <span class="flow-tag creator">Creator</span>
+    </div>
+    <div class="flow-card">
+      <div class="flow-number">03</div>
+      <h3>Cria conteúdo autêntico</h3>
+      <p>Produz conteúdo no estilo dele — Reels, TikTok, Stories, YouTube. Sem roteiro engessado. A autenticidade É a estratégia.</p>
+      <span class="flow-tag creator">Creator</span>
+    </div>
+    <div class="flow-card">
+      <div class="flow-number">04</div>
+      <h3>Plataforma rastreia</h3>
+      <p>Algoritmo proprietário rastreia métricas: views, engajamento, cliques via link trackeado, conversões com cupom exclusivo. Tudo em real-time no dashboard.</p>
+      <span class="flow-tag platform">Plataforma</span>
+    </div>
+    <div class="flow-card">
+      <div class="flow-number">05</div>
+      <h3>Recompensa performance</h3>
+      <p>A marca paga proporcionalmente ao resultado de cada creator. Top performers podem ganhar 10-50x o valor da cota. A cota é devolvida a quem performou.</p>
+      <span class="flow-tag platform">Plataforma</span>
+    </div>
+    <div class="flow-card">
+      <div class="flow-number">06</div>
+      <h3>Todos ganham</h3>
+      <p>Marca ganha UGC autêntico com ROI mensurável. Creator ganha dinheiro e reputação. Audiência recebe conteúdo real. Plataforma ganha comissão.</p>
+      <span class="flow-tag platform">Win-Win-Win</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- SLIDE 6 — O SISTEMA DE COTAS           -->
+<!-- ═══════════════════════════════════════ -->
+<section id="cotas">
+  <div class="section-label">O Sistema de Cotas</div>
+  <h2>Por que a cota <span class="highlight">muda tudo</span>.</h2>
+  <p class="subtitle" style="margin-bottom: 2rem;">A cota não é um custo — é um filtro de qualidade, um mecanismo de compromisso e um diferencial competitivo.</p>
+
+  <div class="moat-grid">
+    <div class="moat-card">
+      <div class="moat-icon">&#x1F3AF;</div>
+      <h3>Filtro Natural</h3>
+      <p>Elimina curiosos e spammers. Só investe quem realmente vai produzir. Resultado: creators mais comprometidos, conteúdo de qualidade superior.</p>
+    </div>
+    <div class="moat-card">
+      <div class="moat-icon">&#x1F4B0;</div>
+      <h3>Skin in the Game</h3>
+      <p>Quando o creator investe R$35, ele vai se dedicar mais do que se recebesse um briefing genérico de graça. Psicologia básica: compromisso financeiro gera compromisso criativo.</p>
+    </div>
+    <div class="moat-card">
+      <div class="moat-icon">&#x1F4C8;</div>
+      <h3>Escassez Calculada</h3>
+      <p>Cotas limitadas por campanha criam urgência e seleção natural. Creators disputam campanhas premium. Marcas podem curar quem participa via ranking.</p>
+    </div>
+    <div class="moat-card">
+      <div class="moat-icon">&#x1F3C6;</div>
+      <h3>Meritocracia Pura</h3>
+      <p>Performance manda. Não importa se tem 500 ou 500K seguidores — importa se o conteúdo converte. Isso democratiza o mercado de influência.</p>
+    </div>
+  </div>
+
+  <div class="quote-block">
+    "O modelo de cotas resolve o maior problema do marketing de influência: a assimetria de risco. Hoje, a marca paga antes e torce. Com cotas, ambos os lados investem — e ambos lucram proporcionalmente."
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- SLIDE 7 — REVENUE MODEL                -->
+<!-- ═══════════════════════════════════════ -->
+<section id="revenue">
+  <div class="section-label">Modelo de Receita</div>
+  <h2>Quatro fontes de receita.<br><span class="highlight">Nenhuma depende de ad spend.</span></h2>
+
+  <div class="revenue-grid">
+    <div class="revenue-card">
+      <div class="revenue-icon green">&#x1F4B8;</div>
+      <h3>Comissão por transação</h3>
+      <div class="revenue-detail">
+        <strong>15-20%</strong> sobre cada recompensa paga pela marca ao creator. Receita principal, escala com volume de campanhas.
+      </div>
+    </div>
+    <div class="revenue-card">
+      <div class="revenue-icon blue">&#x1F3E2;</div>
+      <h3>SaaS para Marcas</h3>
+      <div class="revenue-detail">
+        <strong>R$499-2.999/mês</strong> — Dashboard avançado, analytics de campanhas, filtro de creators, UGC library. Freemium para atrair, premium para fidelizar.
+      </div>
+    </div>
+    <div class="revenue-card">
+      <div class="revenue-icon orange">&#x1F3AB;</div>
+      <h3>Cotas não-resgatadas</h3>
+      <div class="revenue-detail">
+        Creators que compram cota mas não postam em 30 dias perdem o depósito. Historicamente, <strong>15-25%</strong> de abandono em marketplaces similares. Receita passiva.
+      </div>
+    </div>
+    <div class="revenue-card">
+      <div class="revenue-icon purple">&#x2B50;</div>
+      <h3>Campanhas Destacadas</h3>
+      <div class="revenue-detail">
+        Marcas pagam extra para posição premium no marketplace (topo do feed, notificação push para creators relevantes). <strong>CPM interno</strong> para visibilidade.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- SLIDE 8 — UNIT ECONOMICS               -->
+<!-- ═══════════════════════════════════════ -->
+<section id="economics">
+  <div class="section-label">Unit Economics</div>
+  <h2>Os números <span class="highlight">fecham</span>.</h2>
+
+  <div class="economics-box">
+    <div class="economics-side">
+      <h3>&#x1F3E2; Lado Marca</h3>
+      <div class="econ-row"><span class="label">Budget da campanha</span><span class="value">R$ 10.000</span></div>
+      <div class="econ-row"><span class="label">Cotas disponíveis</span><span class="value">200</span></div>
+      <div class="econ-row"><span class="label">Creators ativos (~80%)</span><span class="value">160</span></div>
+      <div class="econ-row"><span class="label">Views estimados (total)</span><span class="value accent">1.6M</span></div>
+      <div class="econ-row"><span class="label">CPM efetivo</span><span class="value green">R$ 6,25</span></div>
+      <div class="econ-row"><span class="label">CPM tradicional (ads)</span><span class="value red">R$ 15-45</span></div>
+      <div class="econ-highlight">
+        <div class="big-number">2.4x &ndash; 7.2x</div>
+        <div class="big-label">mais eficiente que ads tradicionais</div>
+      </div>
+    </div>
+    <div class="economics-divider"></div>
+    <div class="economics-side">
+      <h3>&#x1F3A8; Lado Creator</h3>
+      <div class="econ-row"><span class="label">Investimento (cota)</span><span class="value">R$ 35</span></div>
+      <div class="econ-row"><span class="label">Views do conteúdo</span><span class="value">10.000</span></div>
+      <div class="econ-row"><span class="label">Recompensa base</span><span class="value accent">R$ 50</span></div>
+      <div class="econ-row"><span class="label">Bonus por performance</span><span class="value accent">R$ 150</span></div>
+      <div class="econ-row"><span class="label">Devolução da cota</span><span class="value accent">R$ 35</span></div>
+      <div class="econ-row"><span class="label">Receita total</span><span class="value green">R$ 235</span></div>
+      <div class="econ-highlight">
+        <div class="big-number">6.7x ROI</div>
+        <div class="big-label">retorno sobre o investimento da cota</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="text-align: center; margin-top: 2rem;">
+    <div class="econ-highlight" style="display: inline-block; max-width: 500px;">
+      <div class="big-number">R$ 19.125</div>
+      <div class="big-label">Receita da plataforma por campanha<br>(R$ 1.500 comissão + R$ 1.400 cotas abandonadas + R$ 16.225 margem de scale)</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- SLIDE 9 — MERCADO                      -->
+<!-- ═══════════════════════════════════════ -->
+<section id="mercado">
+  <div class="section-label">Tamanho do Mercado</div>
+  <h2>Um mercado de <span class="highlight">bilhões</span><br>com zero players dominantes.</h2>
+
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-number">US$ 33bi</div>
+      <div class="stat-label">Influencer marketing<br>global (2025)</div>
+      <div class="stat-source">Fonte: Influencer Marketing Hub</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">R$ 3.2bi</div>
+      <div class="stat-label">Influencer marketing<br>Brasil (2025)</div>
+      <div class="stat-source">Fonte: Youpix / Statista</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">500K+</div>
+      <div class="stat-label">Micro-influenciadores<br>ativos no Brasil</div>
+      <div class="stat-source">Fonte: HypeAuditor Brasil</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">78%</div>
+      <div class="stat-label">das marcas vão aumentar<br>investimento em influencer</div>
+      <div class="stat-source">Fonte: Influencer Marketing Hub</div>
+    </div>
+  </div>
+
+  <h3 style="margin-top: 3rem; margin-bottom: 0.5rem;">Landscape competitivo</h3>
+
+  <table class="landscape-table">
+    <thead>
+      <tr>
+        <th>Player</th>
+        <th>Performance-based</th>
+        <th>Sistema de Cotas</th>
+        <th>Micro-creators</th>
+        <th>UGC Library</th>
+        <th>Modelo</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Hotmart</td>
+        <td class="check">&#x2713;</td>
+        <td class="cross">&#x2717;</td>
+        <td class="cross">&#x2717;</td>
+        <td class="cross">&#x2717;</td>
+        <td>Produtos digitais</td>
+      </tr>
+      <tr>
+        <td>Squid / Wake</td>
+        <td class="cross">&#x2717;</td>
+        <td class="cross">&#x2717;</td>
+        <td class="partial">~</td>
+        <td class="cross">&#x2717;</td>
+        <td>Agenciamento</td>
+      </tr>
+      <tr>
+        <td>BrandLovrs</td>
+        <td class="partial">~</td>
+        <td class="cross">&#x2717;</td>
+        <td class="check">&#x2713;</td>
+        <td class="partial">~</td>
+        <td>Community commerce</td>
+      </tr>
+      <tr>
+        <td>Shopee Affiliates</td>
+        <td class="check">&#x2713;</td>
+        <td class="cross">&#x2717;</td>
+        <td class="check">&#x2713;</td>
+        <td class="cross">&#x2717;</td>
+        <td>E-commerce only</td>
+      </tr>
+      <tr>
+        <td>Kwai / TikTok Creator</td>
+        <td class="partial">~</td>
+        <td class="cross">&#x2717;</td>
+        <td class="check">&#x2713;</td>
+        <td class="cross">&#x2717;</td>
+        <td>In-app only</td>
+      </tr>
+      <tr class="cm-row">
+        <td><strong>HUMAPUBLI</strong></td>
+        <td class="check">&#x2713;</td>
+        <td class="check">&#x2713;</td>
+        <td class="check">&#x2713;</td>
+        <td class="check">&#x2713;</td>
+        <td><strong>Marketplace + Cotas</strong></td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- SLIDE 10 — GO-TO-MARKET                -->
+<!-- ═══════════════════════════════════════ -->
+<section id="gtm">
+  <div class="section-label">Go-to-Market</div>
+  <h2>De zero a escala<br><span class="highlight">em 4 fases</span>.</h2>
+
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-phase p1">Fase 1 &mdash; Proof of Concept (Meses 1-3)</div>
+      <h3>Network pessoal + PMEs locais</h3>
+      <p>Rodar 10-20 campanhas manuais com empresas do nosso network. Sem plataforma — operação white-glove via WhatsApp + planilha. Objetivo: validar unit economics e coletar case studies reais.</p>
+      <div class="timeline-metrics">
+        <div class="timeline-metric">Marcas: <span class="val">10-20</span></div>
+        <div class="timeline-metric">Creators: <span class="val">50-100</span></div>
+        <div class="timeline-metric">Budget: <span class="val">R$ 5K</span></div>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-phase p2">Fase 2 &mdash; MVP Digital (Meses 4-8)</div>
+      <h3>Plataforma básica + primeiros case studies</h3>
+      <p>MVP web com marketplace de campanhas, compra de cotas, tracking básico. Usar cases da Fase 1 como prova social. Focar em 2-3 nichos verticais (gastronomia, fitness, beleza).</p>
+      <div class="timeline-metrics">
+        <div class="timeline-metric">Marcas: <span class="val">50-100</span></div>
+        <div class="timeline-metric">Creators: <span class="val">500-1K</span></div>
+        <div class="timeline-metric">MRR: <span class="val">R$ 15-30K</span></div>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-phase p3">Fase 3 &mdash; Growth (Meses 9-18)</div>
+      <h3>Escalar + atrair marcas médias</h3>
+      <p>Programa de embaixadores para creators (indicação vale bônus). Parcerias com agências digitais. Features avançadas: ranking de creators, UGC library, analytics preditivo. App mobile.</p>
+      <div class="timeline-metrics">
+        <div class="timeline-metric">Marcas: <span class="val">300-500</span></div>
+        <div class="timeline-metric">Creators: <span class="val">5K-15K</span></div>
+        <div class="timeline-metric">MRR: <span class="val">R$ 100-250K</span></div>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-phase p4">Fase 4 &mdash; Enterprise (Meses 18+)</div>
+      <h3>Grandes marcas + expansão LATAM</h3>
+      <p>Enterprise sales para marcas grandes (com time de account management). API para agências integrarem. Expansão para México, Colômbia, Argentina. Marketplace self-serve maduro.</p>
+      <div class="timeline-metrics">
+        <div class="timeline-metric">Marcas: <span class="val">1K+</span></div>
+        <div class="timeline-metric">Creators: <span class="val">50K+</span></div>
+        <div class="timeline-metric">ARR: <span class="val">R$ 5-15M</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- SLIDE 11 — COLD START STRATEGY         -->
+<!-- ═══════════════════════════════════════ -->
+<section id="cold-start">
+  <div class="section-label">Resolvendo o Cold Start</div>
+  <h2>O problema do ovo e da galinha.<br><span class="highlight">Resolvido.</span></h2>
+  <p class="subtitle" style="margin-bottom: 2rem;">Todo marketplace two-sided precisa resolver isso. Nossa estratégia é cirúrgica:</p>
+
+  <div class="flow-grid">
+    <div class="flow-card">
+      <div class="flow-number">A</div>
+      <h3>Comece pelo supply (creators)</h3>
+      <p>Creators são mais fáceis de atrair — bastam 3 campanhas ativas pra gerar buzz. Recrutar micro-influenciadores locais com promessa de monetização sem precisar de 100K seguidores.</p>
+    </div>
+    <div class="flow-card">
+      <div class="flow-number">B</div>
+      <h3>Subsidie as primeiras campanhas</h3>
+      <p>Rodar 5-10 campanhas com budget próprio (R$500-1K cada) para marcas parceiras — custo de aquisição. Gera cases, gera tração, gera creators ativos.</p>
+    </div>
+    <div class="flow-card">
+      <div class="flow-number">C</div>
+      <h3>Nicho primeiro, escala depois</h3>
+      <p>Focar em 1-2 verticais (ex: gastronomia em SP). Dominar o nicho cria network effect local antes de expandir. Melhor ser rei de um vilarejo que mendigo de uma cidade.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- SLIDE 12 — MOAT                        -->
+<!-- ═══════════════════════════════════════ -->
+<section id="moat">
+  <div class="section-label">Diferenciais Defensivos</div>
+  <h2>Difícil de copiar.<br><span class="highlight">Impossível de ignorar.</span></h2>
+
+  <div class="moat-grid">
+    <div class="moat-card">
+      <div class="moat-icon">&#x1F512;</div>
+      <h3>Sistema de Cotas (IP)</h3>
+      <p>Mecanismo único no mercado. Combina incentivo financeiro + curadoria + escassez. Passível de patente de modelo de negócio.</p>
+    </div>
+    <div class="moat-card">
+      <div class="moat-icon">&#x1F4CA;</div>
+      <h3>Data Moat</h3>
+      <p>Cada campanha gera dados de performance por creator, nicho, formato. Com o tempo, nosso algoritmo de matching creator-marca fica imbatível.</p>
+    </div>
+    <div class="moat-card">
+      <div class="moat-icon">&#x1F310;</div>
+      <h3>Network Effect</h3>
+      <p>Mais creators atraem mais marcas. Mais marcas atraem mais creators. Quem escala primeiro ganha. Winner-takes-most.</p>
+    </div>
+    <div class="moat-card">
+      <div class="moat-icon">&#x2B50;</div>
+      <h3>Creator Score</h3>
+      <p>Reputação construída na plataforma é intransferível. Creator com score alto ganha acesso a campanhas premium. Lock-in natural — não dá pra levar o histórico pro concorrente.</p>
+    </div>
+    <div class="moat-card">
+      <div class="moat-icon">&#x1F3AC;</div>
+      <h3>UGC Library</h3>
+      <p>Maior acervo de conteúdo autêntico de marca do Brasil. Marcas contratam campanhas só pelo UGC gerado — asset reutilizável.</p>
+    </div>
+    <div class="moat-card">
+      <div class="moat-icon">&#x26A1;</div>
+      <h3>Performance-first DNA</h3>
+      <p>Enquanto o mercado ainda vende CPM e impressões, nós vendemos resultados. A transparência radical é o moat cultural da empresa.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- SLIDE 13 — RISCOS & MITIGAÇÃO          -->
+<!-- ═══════════════════════════════════════ -->
+<section id="riscos">
+  <div class="section-label">Riscos e Mitigações</div>
+  <h2>Olhos abertos.<br><span class="highlight">Preparados.</span></h2>
+
+  <div class="risks-grid">
+    <div class="risk-card">
+      <div class="risk-header">
+        <h3>Regulatório (CONAR)</h3>
+        <span class="risk-label mitigated">Mitigado</span>
+      </div>
+      <p>Publicidade por creators exige disclosure (#publi, #ad). Creators podem não seguir as regras.</p>
+      <div class="mitigation">Disclosure obrigatório no briefing. Template automático. Conteúdo sem tag = bloqueado pela plataforma antes da publicação.</div>
+    </div>
+    <div class="risk-card">
+      <div class="risk-header">
+        <h3>Fraude de métricas</h3>
+        <span class="risk-label mitigated">Mitigado</span>
+      </div>
+      <p>Creators podem inflar views com bots ou pods de engajamento falso.</p>
+      <div class="mitigation">Tracking via API oficial das plataformas + link trackeado + cupom exclusivo. Padrões anômalos detectados por ML. Fraude comprovada = ban permanente.</div>
+    </div>
+    <div class="risk-card">
+      <div class="risk-header">
+        <h3>Brand Safety</h3>
+        <span class="risk-label mitigated">Mitigado</span>
+      </div>
+      <p>Creator associa a marca a conteúdo polêmico, ofensivo ou fora do brief.</p>
+      <div class="mitigation">Moderação pré-publicação opcional (premium). Denúncia rápida. Contrato com cláusula de remoção. Score do creator penalizado.</div>
+    </div>
+    <div class="risk-card">
+      <div class="risk-header">
+        <h3>Cold Start / Liquidez</h3>
+        <span class="risk-label managed">Gerenciado</span>
+      </div>
+      <p>Conseguir creators E marcas ao mesmo tempo no início.</p>
+      <div class="mitigation">Fase 1 manual (sem plataforma). Subsidiar primeiras campanhas. Nicho vertical. Começar com network pessoal. Resolver com suor, não com dinheiro.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- SLIDE 14 — PRÓXIMOS PASSOS             -->
+<!-- ═══════════════════════════════════════ -->
+<section id="proximos-passos">
+  <div class="section-label">Próximos Passos</div>
+  <h2>Do pitch à <span class="highlight">validação real</span><br>em 90 dias.</h2>
+
+  <div class="flow-grid">
+    <div class="flow-card">
+      <div class="flow-number">01</div>
+      <h3>Semana 1-2: Validação</h3>
+      <p>Entrevistar 10 marcas (PMEs) e 20 creators. Validar willingness-to-pay, entender dores, refinar proposta de valor. Tudo via call/WhatsApp.</p>
+      <span class="flow-tag platform">Validação</span>
+    </div>
+    <div class="flow-card">
+      <div class="flow-number">02</div>
+      <h3>Semana 3-4: Piloto manual</h3>
+      <p>Rodar 3-5 campanhas reais manualmente. Grupo no WhatsApp como "plataforma". Planilha como dashboard. Pix como payment. Zero custo de tech.</p>
+      <span class="flow-tag creator">Teste</span>
+    </div>
+    <div class="flow-card">
+      <div class="flow-number">03</div>
+      <h3>Mês 2-3: Case studies</h3>
+      <p>Documentar resultados, ROI, depoimentos. Montar deck de vendas com dados reais. Começar a abordar marcas maiores com prova social.</p>
+      <span class="flow-tag brand">Tração</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- SLIDE 15 — CTA                         -->
+<!-- ═══════════════════════════════════════ -->
+<section id="cta">
+  <div class="section-label">Call to Action</div>
+  <h2>A publicidade de R$35 bilhões<br>está sendo <span class="highlight">redistribuída</span>.<br><br>Vamos liderar essa mudança?</h2>
+  <p class="subtitle" style="margin-top: 1.5rem; margin-bottom: 1rem;">O mercado está migrando de propaganda para conteúdo real. As ferramentas existem. O timing é agora. Falta alguém construir a infraestrutura.</p>
+  <p class="subtitle" style="font-weight: 600; color: var(--accent);">Esse alguém somos nós.</p>
+</section>
+
+<!-- Confidential -->
+<div class="confidential">
+  HUMAPUBLI &mdash; Documento confidencial &mdash; Fevereiro 2026<br>
+  Proibida a reprodução ou compartilhamento sem autorização
+</div>
+
+</body>
+</html>
