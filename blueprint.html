@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>humaPubli — Blueprint Operacional</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --bg-card: #141414;
+    --bg-card-alt: #1a1a1a;
+    --border: #222;
+    --text: #f5f5f5;
+    --text-muted: #888;
+    --text-dim: #555;
+    --pink: #E839A0;
+    --purple: #9B59E8;
+    --orange: #F59E3F;
+    --green: #00e676;
+    --green-dim: rgba(0, 230, 118, 0.12);
+    --red: #ff4444;
+    --red-dim: rgba(255, 68, 68, 0.12);
+    --blue: #448aff;
+    --blue-dim: rgba(68, 138, 255, 0.12);
+    --yellow: #ffd600;
+    --yellow-dim: rgba(255, 214, 0, 0.12);
+    --pink-dim: rgba(232, 57, 160, 0.12);
+    --purple-dim: rgba(155, 89, 232, 0.12);
+    --orange-dim: rgba(245, 158, 63, 0.12);
+    --gradient: linear-gradient(135deg, var(--pink), var(--purple), var(--orange));
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+  }
+
+  /* Nav */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(10,10,10,0.9); backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border); padding: 0 2rem; height: 56px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .nav-brand {
+    font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 1.1rem;
+    background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .nav-links { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .nav-links a {
+    color: var(--text-muted); text-decoration: none; font-size: 0.75rem;
+    padding: 0.3rem 0.6rem; border-radius: 6px; transition: all 0.2s;
+  }
+  .nav-links a:hover { color: var(--text); background: rgba(255,255,255,0.05); }
+
+  /* Sections */
+  section {
+    max-width: 1100px; margin: 0 auto; padding: 5rem 2rem 3rem;
+  }
+  section:first-of-type { padding-top: 7rem; }
+
+  h1 {
+    font-family: 'Montserrat', sans-serif; font-size: 2.5rem; font-weight: 900;
+    margin-bottom: 0.5rem;
+  }
+  h1 span {
+    background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  h2 {
+    font-family: 'Montserrat', sans-serif; font-size: 1.5rem; font-weight: 700;
+    margin-bottom: 1rem; padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--border);
+  }
+  h3 {
+    font-family: 'Montserrat', sans-serif; font-size: 1.1rem; font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+  .subtitle { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 3rem; }
+
+  /* Flow diagrams */
+  .flow {
+    display: flex; align-items: center; gap: 0; flex-wrap: wrap;
+    margin: 1.5rem 0; justify-content: center;
+  }
+  .flow-step {
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 1rem 1.2rem; text-align: center; min-width: 140px; max-width: 180px;
+    position: relative;
+  }
+  .flow-step .emoji { font-size: 1.5rem; margin-bottom: 0.3rem; }
+  .flow-step .label { font-size: 0.8rem; font-weight: 600; }
+  .flow-step .detail { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.2rem; }
+  .flow-arrow {
+    font-size: 1.2rem; color: var(--text-dim); padding: 0 0.3rem; flex-shrink: 0;
+  }
+  .flow-step.highlight { border-color: var(--pink); box-shadow: 0 0 20px rgba(232,57,160,0.15); }
+  .flow-step.money { border-color: var(--green); box-shadow: 0 0 20px rgba(0,230,118,0.1); }
+  .flow-step.question { border-color: var(--yellow); box-shadow: 0 0 20px rgba(255,214,0,0.1); }
+  .flow-step.danger { border-color: var(--red); box-shadow: 0 0 20px rgba(255,68,68,0.1); }
+
+  /* Cards grid */
+  .grid { display: grid; gap: 1.5rem; margin: 1.5rem 0; }
+  .grid-2 { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+  .grid-3 { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+
+  .card {
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px;
+    padding: 1.5rem; transition: border-color 0.3s;
+  }
+  .card:hover { border-color: #333; }
+  .card-header { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.8rem; }
+  .card-header .emoji { font-size: 1.3rem; }
+  .card-header h3 { margin: 0; }
+
+  .card.green { border-left: 3px solid var(--green); }
+  .card.pink { border-left: 3px solid var(--pink); }
+  .card.blue { border-left: 3px solid var(--blue); }
+  .card.orange { border-left: 3px solid var(--orange); }
+  .card.yellow { border-left: 3px solid var(--yellow); }
+  .card.red { border-left: 3px solid var(--red); }
+  .card.purple { border-left: 3px solid var(--purple); }
+
+  /* Question boxes */
+  .question-box {
+    background: var(--yellow-dim); border: 1px solid rgba(255,214,0,0.25);
+    border-radius: 12px; padding: 1rem 1.2rem; margin: 0.8rem 0;
+  }
+  .question-box .q-label {
+    font-size: 0.65rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.1em; color: var(--yellow); margin-bottom: 0.3rem;
+  }
+  .question-box p { font-size: 0.85rem; color: var(--text); }
+
+  .decision-box {
+    background: var(--pink-dim); border: 1px solid rgba(232,57,160,0.25);
+    border-radius: 12px; padding: 1rem 1.2rem; margin: 0.8rem 0;
+  }
+  .decision-box .d-label {
+    font-size: 0.65rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.1em; color: var(--pink); margin-bottom: 0.3rem;
+  }
+  .decision-box p { font-size: 0.85rem; color: var(--text); }
+
+  .resolved-box {
+    background: var(--green-dim); border: 1px solid rgba(0,230,118,0.25);
+    border-radius: 12px; padding: 1rem 1.2rem; margin: 0.8rem 0;
+  }
+  .resolved-box .r-label {
+    font-size: 0.65rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.1em; color: var(--green); margin-bottom: 0.3rem;
+  }
+  .resolved-box p { font-size: 0.85rem; color: var(--text); }
+
+  /* Lists */
+  ul { padding-left: 1.2rem; margin: 0.5rem 0; }
+  li { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.3rem; }
+  li strong { color: var(--text); }
+
+  /* Table */
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.85rem; }
+  th { text-align: left; padding: 0.8rem; border-bottom: 2px solid var(--border); color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; }
+  td { padding: 0.8rem; border-bottom: 1px solid var(--border); }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+
+  /* Divider */
+  .divider { border: none; border-top: 1px solid var(--border); margin: 3rem 0; }
+
+  /* Tag */
+  .tag {
+    display: inline-block; font-size: 0.65rem; font-weight: 600;
+    padding: 0.2rem 0.5rem; border-radius: 4px; text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .tag-green { background: var(--green-dim); color: var(--green); }
+  .tag-red { background: var(--red-dim); color: var(--red); }
+  .tag-yellow { background: var(--yellow-dim); color: var(--yellow); }
+  .tag-blue { background: var(--blue-dim); color: var(--blue); }
+  .tag-pink { background: var(--pink-dim); color: var(--pink); }
+  .tag-purple { background: var(--purple-dim); color: var(--purple); }
+
+  /* Status legend */
+  .legend { display: flex; gap: 1rem; flex-wrap: wrap; margin: 1rem 0; }
+  .legend-item { display: flex; align-items: center; gap: 0.4rem; font-size: 0.75rem; color: var(--text-muted); }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+  /* Annotation fields */
+  .note-wrapper {
+    margin-top: 0.6rem;
+  }
+  .note-toggle {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    font-size: 0.7rem; color: var(--text-dim); cursor: pointer;
+    padding: 0.3rem 0.6rem; border-radius: 6px;
+    border: 1px solid transparent; transition: all 0.2s;
+    background: none; font-family: 'Inter', sans-serif;
+  }
+  .note-toggle:hover { color: var(--text-muted); background: rgba(255,255,255,0.03); }
+  .note-toggle.has-content { color: var(--orange); border-color: rgba(245,158,63,0.25); background: rgba(245,158,63,0.06); }
+  .note-toggle .note-icon { font-size: 0.85rem; }
+  .note-area {
+    display: none; margin-top: 0.5rem;
+  }
+  .note-area.open { display: block; }
+  .note-area textarea {
+    width: 100%; min-height: 60px; max-height: 300px; resize: vertical;
+    background: rgba(245,158,63,0.04); border: 1px solid rgba(245,158,63,0.2);
+    border-radius: 8px; padding: 0.7rem 0.9rem; color: var(--text);
+    font-family: 'Inter', sans-serif; font-size: 0.8rem; line-height: 1.6;
+    outline: none; transition: border-color 0.2s;
+  }
+  .note-area textarea::placeholder { color: var(--text-dim); }
+  .note-area textarea:focus { border-color: var(--orange); }
+  .note-saved {
+    font-size: 0.65rem; color: var(--green); opacity: 0;
+    transition: opacity 0.3s; margin-left: 0.5rem;
+  }
+  .note-saved.show { opacity: 1; }
+
+  /* Export bar */
+  .export-bar {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(10,10,10,0.95); backdrop-filter: blur(20px);
+    border-top: 1px solid var(--border); padding: 0.6rem 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 0.75rem;
+  }
+  .export-bar .stats { color: var(--text-muted); }
+  .export-bar .stats strong { color: var(--orange); }
+  .export-bar .actions { display: flex; gap: 0.5rem; }
+  .export-btn {
+    padding: 0.4rem 0.8rem; border-radius: 6px; font-size: 0.7rem;
+    font-family: 'Inter', sans-serif; font-weight: 600; cursor: pointer;
+    border: 1px solid var(--border); background: var(--bg-card); color: var(--text);
+    transition: all 0.2s;
+  }
+  .export-btn:hover { border-color: var(--orange); background: rgba(245,158,63,0.08); }
+  .export-btn.danger { border-color: rgba(255,68,68,0.3); color: var(--red); }
+  .export-btn.danger:hover { background: rgba(255,68,68,0.08); }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    h1 { font-size: 1.8rem; }
+    section { padding: 3rem 1rem 2rem; }
+    section:last-of-type { padding-bottom: 5rem; }
+    .flow { flex-direction: column; align-items: stretch; }
+    .flow-step { max-width: 100%; }
+    .flow-arrow { transform: rotate(90deg); text-align: center; }
+    .nav-links { display: none; }
+    .export-bar { flex-direction: column; gap: 0.4rem; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">humaPubli — Blueprint</div>
+  <div class="nav-links">
+    <a href="#fluxo-dinheiro">Dinheiro</a>
+    <a href="#aquisicao">Aquisicao</a>
+    <a href="#lifecycle">Lifecycle</a>
+    <a href="#conteudo">Conteudo</a>
+    <a href="#edge-cases">Edge Cases</a>
+    <a href="#canais">Canais</a>
+    <a href="#metricas">Metricas</a>
+    <a href="#decisoes">Decisoes</a>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- HEADER -->
+<!-- ═══════════════════════════════════════ -->
+<section>
+  <h1>Blueprint <span>Operacional</span></h1>
+  <p class="subtitle">Mapa de todas as engrenagens, fluxos e decisoes abertas do humaPubli</p>
+
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div> Resolvido</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--yellow)"></div> Pergunta aberta</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--pink)"></div> Decisao necessaria</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--red)"></div> Risco / Cuidado</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--blue)"></div> Futuro (nao MVP)</div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- 1. FLUXO DE DINHEIRO -->
+<!-- ═══════════════════════════════════════ -->
+<section id="fluxo-dinheiro">
+  <h2>1. Fluxo de Dinheiro 💰</h2>
+  <p style="color:var(--text-muted); margin-bottom:1.5rem">Como o dinheiro entra, circula e sai do humaPubli</p>
+
+  <div class="resolved-box">
+    <div class="r-label">✅ Premissa fundamental</div>
+    <p><strong>A marca so paga se o conteudo der resultado.</strong> Sem resultado = sem custo pra marca. Esse e o diferencial competitivo. O risco e absorvido pelo creator (pass) e pelo humaPubli (operacao).</p>
+  </div>
+
+  <h3>1.1 Receita: De onde vem o dinheiro</h3>
+
+  <table>
+    <tr>
+      <th>Fonte</th>
+      <th>Quem paga</th>
+      <th>Quando</th>
+      <th>Condicao</th>
+      <th>Status</th>
+    </tr>
+    <tr>
+      <td><strong>Pass do Creator</strong></td>
+      <td>Creator</td>
+      <td>Antes da campanha</td>
+      <td>Sempre (skin in the game)</td>
+      <td><span class="tag tag-green">MVP</span></td>
+    </tr>
+    <tr>
+      <td><strong>Pagamento da Marca</strong></td>
+      <td>Marca</td>
+      <td>Pos-campanha</td>
+      <td><strong>So se o conteudo performar</strong></td>
+      <td><span class="tag tag-green">MVP</span></td>
+    </tr>
+    <tr>
+      <td><strong>Upsell (licenciamento)</strong></td>
+      <td>Marca</td>
+      <td>Pos-campanha</td>
+      <td>Marca quer repostar conteudo</td>
+      <td><span class="tag tag-blue">futuro</span></td>
+    </tr>
+  </table>
+
+  <h3>1.2 Fluxo Principal: Performance-Based</h3>
+
+  <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:1rem">O dinheiro so flui da marca quando ha resultado comprovado</p>
+
+  <div class="flow">
+    <div class="flow-step money">
+      <div class="emoji">🎨</div>
+      <div class="label">Creator paga Pass</div>
+      <div class="detail">R$19-49 Pix (antecipado)</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step highlight">
+      <div class="emoji">🏦</div>
+      <div class="label">Conta humaPubli</div>
+      <div class="detail">100% retido (receita certa)</div>
+    </div>
+  </div>
+
+  <div class="flow">
+    <div class="flow-step">
+      <div class="emoji">🎬</div>
+      <div class="label">Creator publica</div>
+      <div class="detail">Conteudo com tracking</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">
+      <div class="emoji">📊</div>
+      <div class="label">Metricas coletadas</div>
+      <div class="detail">Clicks, conversoes, etc.</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step question">
+      <div class="emoji">🎯</div>
+      <div class="label">Bateu meta?</div>
+      <div class="detail">Performance avaliada</div>
+    </div>
+  </div>
+
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; margin:1.5rem 0">
+    <div>
+      <p style="text-align:center; font-size:0.85rem; font-weight:600; color:var(--green); margin-bottom:0.8rem">✅ SIM — Conteudo performou</p>
+      <div class="flow" style="flex-direction:column; align-items:stretch">
+        <div class="flow-step money" style="max-width:100%">
+          <div class="emoji">🏢</div>
+          <div class="label">Marca paga</div>
+          <div class="detail">Baseado nos resultados reais</div>
+        </div>
+        <div class="flow-arrow" style="transform:rotate(90deg); text-align:center">↓</div>
+        <div class="flow-step highlight" style="max-width:100%">
+          <div class="emoji">🏦</div>
+          <div class="label">humaPubli retém comissao</div>
+          <div class="detail">% sobre o valor pago pela marca</div>
+        </div>
+        <div class="flow-arrow" style="transform:rotate(90deg); text-align:center">↓</div>
+        <div class="flow-step money" style="max-width:100%">
+          <div class="emoji">🎨</div>
+          <div class="label">Creator recebe reward</div>
+          <div class="detail">Pix — proporcional a performance</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <p style="text-align:center; font-size:0.85rem; font-weight:600; color:var(--red); margin-bottom:0.8rem">❌ NAO — Conteudo nao performou</p>
+      <div class="flow" style="flex-direction:column; align-items:stretch">
+        <div class="flow-step" style="max-width:100%; border-color:var(--red); opacity:0.7">
+          <div class="emoji">🏢</div>
+          <div class="label">Marca nao paga nada</div>
+          <div class="detail">Zero risco pra marca</div>
+        </div>
+        <div class="flow-arrow" style="transform:rotate(90deg); text-align:center">↓</div>
+        <div class="flow-step" style="max-width:100%; border-color:var(--red); opacity:0.7">
+          <div class="emoji">🎨</div>
+          <div class="label">Creator nao recebe reward</div>
+          <div class="detail">Pass ja pago (nao reembolsa)</div>
+        </div>
+        <div class="flow-arrow" style="transform:rotate(90deg); text-align:center">↓</div>
+        <div class="flow-step highlight" style="max-width:100%">
+          <div class="emoji">🏦</div>
+          <div class="label">humaPubli fica com o pass</div>
+          <div class="detail">Receita minima garantida</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h3>1.3 Resumo: Quem assume o risco</h3>
+
+  <table>
+    <tr><th>Player</th><th>O que investe</th><th>Risco</th><th>Upside</th></tr>
+    <tr>
+      <td><strong>Creator</strong></td>
+      <td>Pass (R$19-49) + tempo de producao</td>
+      <td style="color:var(--yellow)">Perde o pass se nao performar</td>
+      <td style="color:var(--green)">Reward que pode ser 5-10x o pass</td>
+    </tr>
+    <tr>
+      <td><strong>Marca</strong></td>
+      <td>Nada antecipado</td>
+      <td style="color:var(--green)">Zero — so paga se funcionar</td>
+      <td style="color:var(--green)">Conteudo autentico + resultados</td>
+    </tr>
+    <tr>
+      <td><strong>humaPubli</strong></td>
+      <td>Operacao + curadoria + plataforma</td>
+      <td style="color:var(--yellow)">Trabalha mesmo se campanha flopar</td>
+      <td style="color:var(--green)">Pass garantido + comissao sobre resultados</td>
+    </tr>
+  </table>
+
+  <div class="question-box">
+    <div class="q-label">❓ Pergunta aberta</div>
+    <p><strong>O que define "conteudo performou"?</strong> Precisa de um threshold claro. Opcoes: (A) Qualquer click ja conta. (B) Minimo X clicks ou Y conversoes. (C) Marca define a meta na hora de criar a campanha. (D) humaPubli define uma meta padrao por tipo de campanha.</p>
+  </div>
+
+  <div class="question-box">
+    <div class="q-label">❓ Pergunta aberta</div>
+    <p><strong>Como a marca paga?</strong> Modelo: (A) CPC — paga por click (ex: R$2/click). (B) CPA — paga por conversao/venda (ex: R$20/venda). (C) Flat fee pos-resultado — valor combinado se bater meta. (D) % sobre vendas geradas pelo creator.</p>
+  </div>
+
+  <div class="question-box">
+    <div class="q-label">❓ Pergunta aberta</div>
+    <p><strong>Qual % de comissao do humaPubli sobre o que a marca paga?</strong> Opcoes: 10%, 15%, 20%, 25%. Quanto maior, mais margem — mas menos chega pro creator.</p>
+  </div>
+
+  <div class="question-box">
+    <div class="q-label">❓ Pergunta aberta</div>
+    <p><strong>Se o creator nao entrega o conteudo, o pass e reembolsado?</strong> Opcoes: (A) Nao — creator perde o pass. (B) Sim — devolvemos 50%. (C) Sim — devolvemos 100% mas bane o creator.</p>
+  </div>
+
+  <div class="question-box">
+    <div class="q-label">❓ Pergunta aberta</div>
+    <p><strong>Conta PJ ou PF pra receber?</strong> No MVP, Pix pessoal funciona. Quando escalar, precisa de CNPJ (MEI?) pra emitir nota pro marca. Quando fazer essa transicao?</p>
+  </div>
+
+  <h3>1.4 Exemplo numerico</h3>
+
+  <div class="card green">
+    <div class="card-header"><span class="emoji">📊</span><h3>Campanha: Cafe Brasil Verao (10 creators)</h3></div>
+    <table>
+      <tr><td colspan="2" style="color:var(--text-muted);font-size:0.75rem;text-transform:uppercase;letter-spacing:0.05em">Receita garantida (antes dos resultados)</td></tr>
+      <tr><td>Pass (10 creators × R$29)</td><td style="text-align:right"><strong>R$290</strong></td></tr>
+      <tr><td colspan="2" style="color:var(--text-muted);font-size:0.75rem;text-transform:uppercase;letter-spacing:0.05em;padding-top:1rem">Receita variavel (so se performar)</td></tr>
+      <tr><td>Marca paga por resultados</td><td style="text-align:right"><strong>R$2.000</strong></td></tr>
+      <tr><td>Comissao humaPubli (20%)</td><td style="text-align:right"><strong>R$400</strong></td></tr>
+      <tr><td>Reward pago aos creators</td><td style="text-align:right;color:var(--text-muted)">R$1.600</td></tr>
+      <tr style="border-top:2px solid var(--green)"><td><strong>Receita total humaPubli</strong></td><td style="text-align:right;color:var(--green)"><strong>R$690</strong></td></tr>
+    </table>
+    <p style="font-size:0.75rem;color:var(--text-dim);margin-top:0.5rem">* Se a campanha flopar: humaPubli fica com R$290 (passes). Marca paga R$0. Creators nao recebem reward.</p>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ═══════════════════════════════════════ -->
+<!-- 2. AQUISICAO -->
+<!-- ═══════════════════════════════════════ -->
+<section id="aquisicao">
+  <h2>2. Aquisicao: Como encontramos creators e marcas 🎯</h2>
+
+  <div class="grid grid-2">
+    <div class="card pink">
+      <div class="card-header"><span class="emoji">🎨</span><h3>Aquisicao de Creators</h3></div>
+      <ul>
+        <li><strong>Organico:</strong> Instagram, TikTok, Reels mostrando "como funciona"</li>
+        <li><strong>DM ativo:</strong> Prospectar micro-creators com 1K-50K seguidores</li>
+        <li><strong>Indicacao:</strong> Creator indica creator, ambos ganham bonus</li>
+        <li><strong>Comunidade:</strong> Grupo WhatsApp/Telegram de creators humaPubli</li>
+        <li><strong>Eventos:</strong> Meetups locais de creators (SP, RJ)</li>
+      </ul>
+      <div class="question-box">
+        <div class="q-label">❓ Pergunta</div>
+        <p><strong>Programa de indicacao:</strong> Creator ganha R$X por cada indicado que compra 1 pass? Quanto?</p>
+      </div>
+    </div>
+
+    <div class="card orange">
+      <div class="card-header"><span class="emoji">🏢</span><h3>Aquisicao de Marcas</h3></div>
+      <ul>
+        <li><strong>Outbound:</strong> Cold email/DM pra marcas D2C, e-commerces locais</li>
+        <li><strong>Inbound:</strong> Landing page + SEO + case studies</li>
+        <li><strong>Rede pessoal:</strong> Contatos do Paulo, networking E2</li>
+        <li><strong>Parcerias:</strong> Agencias de marketing que querem terceirizar</li>
+        <li><strong>Freemium:</strong> 1a campanha gratis (so paga reward se funcionar)</li>
+      </ul>
+      <div class="question-box">
+        <div class="q-label">❓ Pergunta</div>
+        <p><strong>Campanha piloto gratis?</strong> Oferecer 1 campanha sem fee pra marca testar. Risco: marca usa e nao volta. Mitigacao: limite de 3 creators na piloto.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="decision-box">
+    <div class="d-label">🔴 Decisao necessaria</div>
+    <p><strong>Quem vem primeiro: creators ou marcas?</strong> Chicken-and-egg classico. Sugestao: recrutar 50 creators primeiro (organico + DM), depois abordar marcas com "ja temos X creators no seu nicho".</p>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ═══════════════════════════════════════ -->
+<!-- 3. LIFECYCLE DA CAMPANHA -->
+<!-- ═══════════════════════════════════════ -->
+<section id="lifecycle">
+  <h2>3. Lifecycle Completo da Campanha 🔄</h2>
+
+  <h3>3.1 Fase 1: Criacao</h3>
+  <div class="flow">
+    <div class="flow-step">
+      <div class="emoji">🏢</div>
+      <div class="label">Marca preenche brief</div>
+      <div class="detail">Formulario na plataforma</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step highlight">
+      <div class="emoji">👀</div>
+      <div class="label">Founders revisam</div>
+      <div class="detail">Qualidade do brief</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step question">
+      <div class="emoji">💰</div>
+      <div class="label">Marca deposita budget</div>
+      <div class="detail">Pix / Boleto</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step money">
+      <div class="emoji">✅</div>
+      <div class="label">Campanha ativa</div>
+      <div class="detail">Visivel pros creators</div>
+    </div>
+  </div>
+
+  <div class="question-box">
+    <div class="q-label">❓ Pergunta</div>
+    <p><strong>A marca deposita o budget ANTES de publicar a campanha?</strong> Isso garante que tem dinheiro pro reward. Mas cria fricção. Alternativa: marca assina contrato/termo e paga depois.</p>
+  </div>
+
+  <h3>3.2 Fase 2: Recrutamento</h3>
+  <div class="flow">
+    <div class="flow-step">
+      <div class="emoji">🎨</div>
+      <div class="label">Creator ve campanha</div>
+      <div class="detail">Browse na plataforma</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">
+      <div class="emoji">🎫</div>
+      <div class="label">Compra pass (Pix)</div>
+      <div class="detail">R$19-49</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step highlight">
+      <div class="emoji">✋</div>
+      <div class="label">Founders confirmam Pix</div>
+      <div class="detail">Manual (banco)</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step money">
+      <div class="emoji">📋</div>
+      <div class="label">Creator acessa brief</div>
+      <div class="detail">+ link tracking</div>
+    </div>
+  </div>
+
+  <div class="question-box">
+    <div class="q-label">❓ Pergunta</div>
+    <p><strong>A marca aprova o creator antes do pass?</strong> Opcoes: (A) Qualquer creator compra pass livremente. (B) Creator "se candidata", marca aprova, depois paga pass. (C) humaPubli cura e sugere creators pra marca.</p>
+  </div>
+
+  <div class="question-box">
+    <div class="q-label">❓ Pergunta</div>
+    <p><strong>O que acontece se 20 creators querem participar mas so tem 10 vagas?</strong> First come first served? Score prioriza? Marca escolhe?</p>
+  </div>
+
+  <h3>3.3 Fase 3: Producao de Conteudo</h3>
+  <div class="flow">
+    <div class="flow-step">
+      <div class="emoji">🎬</div>
+      <div class="label">Creator produz</div>
+      <div class="detail">Segue brief</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step question">
+      <div class="emoji">👁️</div>
+      <div class="label">Aprovacao?</div>
+      <div class="detail">Marca ou humaPubli?</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">
+      <div class="emoji">📱</div>
+      <div class="label">Creator publica</div>
+      <div class="detail">Com link tracking</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">
+      <div class="emoji">🔗</div>
+      <div class="label">Submete URL</div>
+      <div class="detail">Na plataforma</div>
+    </div>
+  </div>
+
+  <div class="decision-box">
+    <div class="d-label">🔴 Decisao critica</div>
+    <p><strong>A marca aprova o conteudo ANTES do creator publicar?</strong></p>
+    <ul>
+      <li><strong>Opção A — Sem aprovação:</strong> Creator publica direto. Mais rapido, mais autêntico, menos controle. Risco: conteudo ruim com a marca.</li>
+      <li><strong>Opção B — Aprovação obrigatória:</strong> Creator envia preview, marca aprova/rejeita, depois publica. Mais seguro, mais lento, mata espontaneidade.</li>
+      <li><strong>Opção C — Híbrido:</strong> Campanhas <R$100 sem aprovação. Campanhas premium com aprovação. Ou: 1ª vez com aprovação, depois livre.</li>
+    </ul>
+  </div>
+
+  <h3>3.4 Fase 4: Resultados e Payout</h3>
+  <div class="flow">
+    <div class="flow-step">
+      <div class="emoji">📊</div>
+      <div class="label">Periodo de tracking</div>
+      <div class="detail">7-30 dias</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step highlight">
+      <div class="emoji">📈</div>
+      <div class="label">Founders registram</div>
+      <div class="detail">Clicks, conversoes</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">
+      <div class="emoji">🧮</div>
+      <div class="label">Calcula reward</div>
+      <div class="detail">Formula automatica</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step money">
+      <div class="emoji">💸</div>
+      <div class="label">Pix pro creator</div>
+      <div class="detail">Manual (founders)</div>
+    </div>
+  </div>
+
+  <div class="question-box">
+    <div class="q-label">❓ Pergunta</div>
+    <p><strong>Qual a formula do reward?</strong> Opcoes: (A) Fixo (todo mundo recebe igual). (B) Performance (% dos clicks/conversoes). (C) Tiered (bateu meta X = R$100, meta Y = R$200). (D) Pool (budget total ÷ creators proporcionalmente).</p>
+  </div>
+
+  <div class="question-box">
+    <div class="q-label">❓ Pergunta</div>
+    <p><strong>Quando exatamente o reward e pago?</strong> (A) X dias apos deadline. (B) Quando marca aprovar resultados. (C) Automatico quando campanha encerrar. Qual o prazo maximo?</p>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ═══════════════════════════════════════ -->
+<!-- 4. CONTEUDO & APROVACAO -->
+<!-- ═══════════════════════════════════════ -->
+<section id="conteudo">
+  <h2>4. Conteudo: Analise, Aprovacao e Direitos 🎬</h2>
+
+  <div class="grid grid-2">
+    <div class="card pink">
+      <div class="card-header"><span class="emoji">✅</span><h3>Criterios de aprovacao</h3></div>
+      <ul>
+        <li>Seguiu o brief? (hashtags, mencoes, formato)</li>
+        <li>Qualidade minima? (iluminacao, audio, enquadramento)</li>
+        <li>Produto/marca aparece corretamente?</li>
+        <li>Nao viola guidelines da plataforma?</li>
+        <li>Nao tem conteudo ofensivo/controverso?</li>
+      </ul>
+      <div class="question-box">
+        <div class="q-label">❓ Pergunta</div>
+        <p>Quem define os criterios de qualidade minima? Nos ou a marca? Temos um checklist padrao?</p>
+      </div>
+    </div>
+
+    <div class="card red">
+      <div class="card-header"><span class="emoji">❌</span><h3>Motivos de rejeicao</h3></div>
+      <ul>
+        <li>Nao seguiu o brief</li>
+        <li>Qualidade muito baixa</li>
+        <li>Conteudo ofensivo/inadequado</li>
+        <li>Nao usou hashtags/mencoes corretas</li>
+        <li>Publicou fora do prazo</li>
+        <li>Usou o produto do concorrente no video</li>
+      </ul>
+      <div class="question-box">
+        <div class="q-label">❓ Pergunta</div>
+        <p><strong>Creator rejeitado pode reenviar?</strong> Quantas vezes? Perde o pass se reprovar?</p>
+      </div>
+    </div>
+  </div>
+
+  <h3 style="margin-top:2rem">4.1 Direitos sobre o conteudo</h3>
+
+  <div class="decision-box">
+    <div class="d-label">🔴 Decisao critica — Direitos de uso</div>
+    <p><strong>A marca pode repostar o conteudo do creator na propria rede?</strong></p>
+    <ul>
+      <li><strong>Opção A — Incluso no pass:</strong> Ao comprar pass, creator cede direito de repost. Simples, mas limita valor.</li>
+      <li><strong>Opção B — Licenciamento extra:</strong> Marca paga X a mais pra usar o conteudo. Nova fonte de receita. Mais complexo.</li>
+      <li><strong>Opção C — Caso a caso:</strong> Marca pede, founder negocia com creator. Nao escala, mas funciona no MVP.</li>
+    </ul>
+  </div>
+
+  <div class="question-box">
+    <div class="q-label">❓ Pergunta</div>
+    <p><strong>Exclusividade:</strong> Creator pode postar pra concorrente da marca durante a campanha? E depois? Periodo de "nao-concorrencia"?</p>
+  </div>
+
+  <div class="question-box">
+    <div class="q-label">❓ Pergunta</div>
+    <p><strong>Quem e dono do conteudo?</strong> O creator sempre? A marca apos pagar? Precisa de um termo de uso claro assinado no cadastro?</p>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ═══════════════════════════════════════ -->
+<!-- 5. EDGE CASES -->
+<!-- ═══════════════════════════════════════ -->
+<section id="edge-cases">
+  <h2>5. Edge Cases e Cenarios Complicados ⚠️</h2>
+
+  <div class="grid grid-2">
+    <div class="card yellow">
+      <div class="card-header"><span class="emoji">📈</span><h3>Conteudo viraliza depois</h3></div>
+      <p style="font-size:0.85rem;color:var(--text-muted)">Creator postou, campanha encerrou, 3 meses depois o Reels viraliza com 500K views. O que acontece?</p>
+      <div class="question-box">
+        <div class="q-label">❓ Opcoes</div>
+        <p>(A) Nada — reward ja foi pago. (B) Bonus retroativo pro creator. (C) Marca paga extra pelo resultado incremental. (D) Celebramos e usamos como case study.</p>
+      </div>
+    </div>
+
+    <div class="card yellow">
+      <div class="card-header"><span class="emoji">🗑️</span><h3>Creator deleta o post</h3></div>
+      <p style="font-size:0.85rem;color:var(--text-muted)">Creator publicou, recebeu reward, e depois deletou o post. Como lidar?</p>
+      <div class="question-box">
+        <div class="q-label">❓ Opcoes</div>
+        <p>(A) Exigir permanencia minima (30/60/90 dias). (B) Penalizar no Creator Score. (C) Reter parte do reward ate confirmar permanencia. (D) Cobrar multa.</p>
+      </div>
+    </div>
+
+    <div class="card yellow">
+      <div class="card-header"><span class="emoji">😡</span><h3>Marca nao gostou do conteudo</h3></div>
+      <p style="font-size:0.85rem;color:var(--text-muted)">Creator seguiu o brief mas a marca nao curtiu. O conteudo ja esta publicado.</p>
+      <div class="question-box">
+        <div class="q-label">❓ Opcoes</div>
+        <p>(A) Azar da marca — brief era claro. (B) Creator refaz (1 chance). (C) Desconto no reward. (D) humaPubli media a situacao.</p>
+      </div>
+    </div>
+
+    <div class="card yellow">
+      <div class="card-header"><span class="emoji">⏰</span><h3>Creator nao entrega no prazo</h3></div>
+      <p style="font-size:0.85rem;color:var(--text-muted)">Comprou pass, prazo venceu, nada publicado.</p>
+      <div class="question-box">
+        <div class="q-label">❓ Opcoes</div>
+        <p>(A) Perde pass + ban temporario. (B) 48h de grace period + warning. (C) Creator Score cai drasticamente. (D) Notificacao automatica antes do deadline.</p>
+      </div>
+    </div>
+
+    <div class="card yellow">
+      <div class="card-header"><span class="emoji">🤖</span><h3>Conteudo feito com IA</h3></div>
+      <p style="font-size:0.85rem;color:var(--text-muted)">Creator usa IA pra gerar roteiro, editar, ou ate gerar o video inteiro.</p>
+      <div class="question-box">
+        <div class="q-label">❓ Opcoes</div>
+        <p>(A) Proibido — conteudo tem que ser autentico. (B) Permitido como ferramenta (roteiro OK, deepfake NO). (C) Cada marca decide na campanha.</p>
+      </div>
+    </div>
+
+    <div class="card yellow">
+      <div class="card-header"><span class="emoji">💀</span><h3>Creator compra seguidores/engajamento</h3></div>
+      <p style="font-size:0.85rem;color:var(--text-muted)">Metricas infladas artificialmente. Clicks comprados.</p>
+      <div class="question-box">
+        <div class="q-label">❓ Opcoes</div>
+        <p>(A) Ban permanente + perda de todos os rewards. (B) Auditoria manual do perfil antes de aceitar. (C) Creator Score algoritmico que detecta anomalias.</p>
+      </div>
+    </div>
+
+    <div class="card red">
+      <div class="card-header"><span class="emoji">⚖️</span><h3>Marca nao paga o reward</h3></div>
+      <p style="font-size:0.85rem;color:var(--text-muted)">Campanha concluiu, creators entregaram, marca sumiu.</p>
+      <div class="question-box">
+        <div class="q-label">❓ Opcoes</div>
+        <p>(A) Budget antecipado resolve isso. (B) humaPubli cobre do proprio bolso e cobra a marca. (C) Contrato com clausula de inadimplencia.</p>
+      </div>
+    </div>
+
+    <div class="card red">
+      <div class="card-header"><span class="emoji">📉</span><h3>Campanha flopa (zero resultado)</h3></div>
+      <p style="font-size:0.85rem;color:var(--text-muted)">Ninguem clicou, zero conversoes. Marca frustrada.</p>
+      <div class="question-box">
+        <div class="q-label">❓ Opcoes</div>
+        <p>(A) Faz parte do jogo — marketing tem risco. (B) Oferecer 2a campanha com desconto. (C) Analisar o que falhou e recriar campanha gratis. (D) Garantia minima de X impressoes.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ═══════════════════════════════════════ -->
+<!-- 6. CANAIS E PLATAFORMAS -->
+<!-- ═══════════════════════════════════════ -->
+<section id="canais">
+  <h2>6. Canais e Plataformas 📱</h2>
+
+  <div class="grid grid-3">
+    <div class="card green">
+      <div class="card-header"><span class="emoji">📸</span><h3>Instagram</h3></div>
+      <ul>
+        <li>Reels (formato principal)</li>
+        <li>Stories (complementar)</li>
+        <li>Feed Post (estatico)</li>
+        <li>Link na bio pra tracking</li>
+      </ul>
+      <p style="font-size:0.75rem;color:var(--green);margin-top:0.5rem">✓ Pronto no MVP</p>
+    </div>
+
+    <div class="card green">
+      <div class="card-header"><span class="emoji">🎵</span><h3>TikTok</h3></div>
+      <ul>
+        <li>Video curto (15-60s)</li>
+        <li>Link na bio pra tracking</li>
+        <li>Duets/Stitches como bonus</li>
+      </ul>
+      <p style="font-size:0.75rem;color:var(--green);margin-top:0.5rem">✓ Pronto no MVP</p>
+    </div>
+
+    <div class="card blue">
+      <div class="card-header"><span class="emoji">▶️</span><h3>YouTube</h3></div>
+      <ul>
+        <li>Shorts (equivalente Reels)</li>
+        <li>Videos longos (integracao)</li>
+        <li>Links na descricao</li>
+        <li>Analytics mais robustos</li>
+      </ul>
+      <p style="font-size:0.75rem;color:var(--blue);margin-top:0.5rem">📋 Fase 2</p>
+    </div>
+  </div>
+
+  <div class="question-box">
+    <div class="q-label">❓ Pergunta — YouTube</div>
+    <p><strong>Onboarding de canais YouTube:</strong> Faz sentido no MVP ou so na Fase 2? Creators de YouTube geralmente cobram mais caro e tem audiencia diferente. Vale ter um tier separado? O tracking e mais facil (links na descricao + analytics do YT).</p>
+  </div>
+
+  <div class="question-box">
+    <div class="q-label">❓ Pergunta — Multi-plataforma</div>
+    <p><strong>Creator pode postar o MESMO conteudo em varias plataformas?</strong> Se sim, recebe reward extra? Ou o pass ja cobre multi-plataforma? Isso multiplica o alcance sem custo adicional.</p>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ═══════════════════════════════════════ -->
+<!-- 7. METRICAS E TRACKING -->
+<!-- ═══════════════════════════════════════ -->
+<section id="metricas">
+  <h2>7. Metricas, Tracking e Creator Score ⭐</h2>
+
+  <h3>7.1 O que medimos</h3>
+  <div class="grid grid-3">
+    <div class="card">
+      <div class="card-header"><span class="emoji">👁️</span><h3>Alcance</h3></div>
+      <ul>
+        <li>Impressoes</li>
+        <li>Views do video</li>
+        <li>Alcance unico</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="emoji">💬</span><h3>Engajamento</h3></div>
+      <ul>
+        <li>Curtidas</li>
+        <li>Comentarios</li>
+        <li>Compartilhamentos</li>
+        <li>Saves</li>
+        <li>Taxa de engajamento %</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="emoji">🎯</span><h3>Conversao</h3></div>
+      <ul>
+        <li>Clicks no link</li>
+        <li>Vendas (UTM tracking)</li>
+        <li>Cadastros</li>
+        <li>Downloads</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question-box">
+    <div class="q-label">❓ Pergunta — Coleta de dados</div>
+    <p><strong>Como coletamos as metricas?</strong> No MVP os founders inserem manualmente. Mas de onde vem os dados? (A) Creator manda screenshot do Instagram Insights. (B) Usamos API do Instagram/TikTok (precisa permissao). (C) So medimos clicks via UTM (Google Analytics da marca).</p>
+  </div>
+
+  <h3>7.2 Creator Score</h3>
+  <div class="card purple">
+    <div class="card-header"><span class="emoji">⭐</span><h3>Como funciona o Creator Score (0-10)</h3></div>
+    <table>
+      <tr><th>Fator</th><th>Peso</th><th>Como medir</th></tr>
+      <tr><td>Taxa de entrega (cumpriu prazo)</td><td>30%</td><td>Entregas no prazo / total</td></tr>
+      <tr><td>Qualidade do conteudo</td><td>25%</td><td>Rating da marca (1-5)</td></tr>
+      <tr><td>Performance (engajamento)</td><td>25%</td><td>Media de engagement rate</td></tr>
+      <tr><td>Profissionalismo</td><td>10%</td><td>Comunicacao, postura</td></tr>
+      <tr><td>Historico</td><td>10%</td><td>Campanhas completadas</td></tr>
+    </table>
+
+    <div class="question-box">
+      <div class="q-label">❓ Pergunta</div>
+      <p><strong>O Creator Score desbloqueia beneficios?</strong> Ex: Score 8+ = acesso antecipado a campanhas premium. Score 9+ = pass gratis. Score &lt;4 = bloqueado de novas campanhas.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ═══════════════════════════════════════ -->
+<!-- 8. DECISOES ABERTAS -->
+<!-- ═══════════════════════════════════════ -->
+<section id="decisoes">
+  <h2>8. Painel de Decisoes Abertas 🎯</h2>
+  <p style="color:var(--text-muted);margin-bottom:2rem">Todas as decisoes que precisam ser tomadas antes do launch, organizadas por prioridade</p>
+
+  <h3>🔴 Criticas (bloqueia launch)</h3>
+  <table>
+    <tr><th>#</th><th>Decisao</th><th>Opcoes</th><th>Secao</th></tr>
+    <tr><td>1</td><td>Marca aprova conteudo antes de publicar?</td><td>Sem / Com / Hibrido</td><td><a href="#conteudo" style="color:var(--pink)">§4</a></td></tr>
+    <tr><td>2</td><td>Marca deposita budget antecipado?</td><td>Sim / Pos / 50-50</td><td><a href="#fluxo-dinheiro" style="color:var(--pink)">§1</a></td></tr>
+    <tr><td>3</td><td>Formula do reward</td><td>Fixo / Performance / Tiered / Pool</td><td><a href="#lifecycle" style="color:var(--pink)">§3</a></td></tr>
+    <tr><td>4</td><td>Direitos de repost pra marca</td><td>Incluso / Extra / Caso a caso</td><td><a href="#conteudo" style="color:var(--pink)">§4</a></td></tr>
+    <tr><td>5</td><td>Conta PJ vs PF pra operar</td><td>PF (MVP) / MEI / LTDA</td><td><a href="#fluxo-dinheiro" style="color:var(--pink)">§1</a></td></tr>
+  </table>
+
+  <h3 style="margin-top:2rem">🟡 Importantes (pode lançar sem, mas precisa logo)</h3>
+  <table>
+    <tr><th>#</th><th>Decisao</th><th>Opcoes</th><th>Secao</th></tr>
+    <tr><td>6</td><td>% comissao sobre reward</td><td>10% / 15% / 20%</td><td><a href="#fluxo-dinheiro" style="color:var(--yellow)">§1</a></td></tr>
+    <tr><td>7</td><td>Politica de reembolso do pass</td><td>Sem / 50% / 100%+ban</td><td><a href="#fluxo-dinheiro" style="color:var(--yellow)">§1</a></td></tr>
+    <tr><td>8</td><td>Programa de indicacao</td><td>R$ fixo / % / Nao ter</td><td><a href="#aquisicao" style="color:var(--yellow)">§2</a></td></tr>
+    <tr><td>9</td><td>Creator Score desbloqueia beneficios?</td><td>Sim / Nao / Fase 2</td><td><a href="#metricas" style="color:var(--yellow)">§7</a></td></tr>
+    <tr><td>10</td><td>Multi-plataforma = reward extra?</td><td>Sim / Nao / Bonus</td><td><a href="#canais" style="color:var(--yellow)">§6</a></td></tr>
+    <tr><td>11</td><td>Como coletar metricas (MVP)</td><td>Screenshot / UTM only / API</td><td><a href="#metricas" style="color:var(--yellow)">§7</a></td></tr>
+  </table>
+
+  <h3 style="margin-top:2rem">🔵 Fase 2 (pode esperar)</h3>
+  <table>
+    <tr><th>#</th><th>Decisao</th><th>Secao</th></tr>
+    <tr><td>12</td><td>Onboarding de canais YouTube</td><td><a href="#canais" style="color:var(--blue)">§6</a></td></tr>
+    <tr><td>13</td><td>Campanha piloto gratis pra marca</td><td><a href="#aquisicao" style="color:var(--blue)">§2</a></td></tr>
+    <tr><td>14</td><td>Licenciamento de conteudo (upsell)</td><td><a href="#conteudo" style="color:var(--blue)">§4</a></td></tr>
+    <tr><td>15</td><td>Deteccao automatica de fraude (engajamento falso)</td><td><a href="#edge-cases" style="color:var(--blue)">§5</a></td></tr>
+    <tr><td>16</td><td>Termos de uso juridicos</td><td><a href="#conteudo" style="color:var(--blue)">§4</a></td></tr>
+  </table>
+</section>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- FOOTER -->
+<!-- ═══════════════════════════════════════ -->
+<section style="text-align:center; padding-bottom:4rem">
+  <hr class="divider">
+  <p style="color:var(--text-dim); font-size:0.75rem; margin-top:2rem">
+    humaPubli — Blueprint Operacional v1.0 — Fevereiro 2026<br>
+    Documento vivo. Atualizar conforme decisoes forem tomadas.
+  </p>
+</section>
+
+<!-- Export bar -->
+<div class="export-bar">
+  <div class="stats">
+    <span id="note-count">0</span> anotacoes salvas
+  </div>
+  <div class="actions">
+    <button class="export-btn" onclick="exportNotes()">Exportar anotacoes</button>
+    <button class="export-btn danger" onclick="clearAllNotes()">Limpar tudo</button>
+  </div>
+</div>
+
+<script>
+(function() {
+  var STORAGE_KEY = 'humapubli-blueprint-notes';
+
+  function loadNotes() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); }
+    catch(e) { return {}; }
+  }
+
+  function saveNotes(notes) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(notes));
+    updateCount();
+  }
+
+  function updateCount() {
+    var notes = loadNotes();
+    var count = Object.values(notes).filter(function(v) { return v.trim(); }).length;
+    document.getElementById('note-count').textContent = count;
+  }
+
+  function createNoteWidget(id, label) {
+    var notes = loadNotes();
+    var saved = notes[id] || '';
+
+    var wrapper = document.createElement('div');
+    wrapper.className = 'note-wrapper';
+    wrapper.setAttribute('data-note-id', id);
+    wrapper.setAttribute('data-note-label', label);
+
+    var toggle = document.createElement('button');
+    toggle.className = 'note-toggle' + (saved ? ' has-content' : '');
+    toggle.innerHTML = '<span class="note-icon">✏️</span> ' +
+      (saved ? 'Minha anotacao — ' + label : 'Anotar — ' + label) +
+      '<span class="note-saved" id="saved-' + id + '">salvo</span>';
+
+    var area = document.createElement('div');
+    area.className = 'note-area' + (saved ? ' open' : '');
+
+    var textarea = document.createElement('textarea');
+    textarea.placeholder = 'Suas anotacoes sobre ' + label + '...';
+    textarea.value = saved;
+
+    var saveTimeout;
+    textarea.addEventListener('input', function() {
+      var val = this.value;
+      var allNotes = loadNotes();
+      allNotes[id] = val;
+      saveNotes(allNotes);
+
+      toggle.className = 'note-toggle' + (val.trim() ? ' has-content' : '');
+      toggle.innerHTML = '<span class="note-icon">✏️</span> ' +
+        (val.trim() ? 'Minha anotacao — ' + label : 'Anotar — ' + label) +
+        '<span class="note-saved show" id="saved-' + id + '">salvo</span>';
+
+      clearTimeout(saveTimeout);
+      saveTimeout = setTimeout(function() {
+        var indicator = document.getElementById('saved-' + id);
+        if (indicator) indicator.classList.remove('show');
+      }, 1500);
+    });
+
+    toggle.addEventListener('click', function() {
+      area.classList.toggle('open');
+      if (area.classList.contains('open')) {
+        setTimeout(function() { textarea.focus(); }, 100);
+      }
+    });
+
+    area.appendChild(textarea);
+    wrapper.appendChild(toggle);
+    wrapper.appendChild(area);
+
+    wrapper.style.marginTop = '1rem';
+    wrapper.style.marginBottom = '2rem';
+    wrapper.style.paddingTop = '0.8rem';
+    wrapper.style.borderTop = '1px dashed rgba(255,255,255,0.06)';
+
+    return wrapper;
+  }
+
+  // ── Place notes at the end of each subsection ──
+
+  var sections = document.querySelectorAll('section[id]');
+
+  sections.forEach(function(sec) {
+    var secId = sec.id;
+    var h2 = sec.querySelector('h2');
+    if (!h2) return;
+
+    // Extract section number from h2 text
+    var secMatch = h2.textContent.match(/^(\d+)\./);
+    var secNum = secMatch ? secMatch[1] : secId;
+
+    // Find all h3 within this section (direct children only conceptually)
+    var h3s = sec.querySelectorAll('h3');
+
+    if (h3s.length > 0) {
+      // Process each h3 subsection
+      for (var i = 0; i < h3s.length; i++) {
+        var h3 = h3s[i];
+
+        // Extract subsection label
+        var subMatch = h3.textContent.match(/^(\d+\.\d+)/);
+        var subLabel = subMatch ? subMatch[1] : secNum + '.' + (i + 1);
+        var subTitle = h3.textContent
+          .replace(/^(\d+\.\d+)\s*/, '')
+          .replace(/^[^\w\s]*\s*/, '')
+          .replace(/\s*[^\w\s\(\)áéíóúãõçÁÉÍÓÚÃÕÇ,\-]*$/, '')
+          .trim();
+        var displayLabel = subLabel + ' ' + subTitle;
+
+        // Find the last element before the next h3 (or end of section)
+        var boundary = h3s[i + 1] || null;
+        var lastEl = h3;
+        var sibling = h3.nextElementSibling;
+        while (sibling && sibling !== boundary) {
+          lastEl = sibling;
+          sibling = sibling.nextElementSibling;
+        }
+
+        // Insert note after this subsection
+        var noteId = 'sub-' + subLabel.replace(/\./g, '-');
+        var widget = createNoteWidget(noteId, displayLabel);
+        lastEl.insertAdjacentElement('afterend', widget);
+      }
+
+      // Check for content BEFORE first h3 (intro, premissas, etc.)
+      var firstH3 = h3s[0];
+      var hasPreContent = false;
+      var lastPreEl = null;
+      var node = h2.nextElementSibling;
+      while (node && node !== firstH3) {
+        if (node.nodeType === 1 && !node.classList.contains('note-wrapper')) {
+          hasPreContent = true;
+          lastPreEl = node;
+        }
+        node = node.nextElementSibling;
+      }
+      if (hasPreContent && lastPreEl) {
+        var preId = 'sec-' + secNum + '-intro';
+        var preLabel = secNum + '. Intro / Premissas';
+        var preWidget = createNoteWidget(preId, preLabel);
+        lastPreEl.insertAdjacentElement('afterend', preWidget);
+      }
+
+    } else {
+      // No h3s — section without subsections (§2, §5, etc.)
+      // Add one note at the very end of the section
+      var secTitle = h2.textContent
+        .replace(/^\d+\.\s*/, '')
+        .replace(/\s*[^\w\s áéíóúãõçÁÉÍÓÚÃÕÇ].*$/, '')
+        .trim();
+      var noteId2 = 'sec-' + secNum;
+      var displayLabel2 = secNum + '. ' + secTitle;
+      var widget2 = createNoteWidget(noteId2, displayLabel2);
+      sec.appendChild(widget2);
+    }
+  });
+
+  updateCount();
+
+  // ── Export ──
+  window.exportNotes = function() {
+    var notes = loadNotes();
+    var filled = Object.entries(notes).filter(function(e) { return e[1].trim(); });
+    if (filled.length === 0) { alert('Nenhuma anotacao pra exportar.'); return; }
+
+    var text = 'humaPubli — Blueprint Operacional — Anotacoes\n';
+    text += 'Exportado em: ' + new Date().toLocaleString('pt-BR') + '\n';
+    text += '='.repeat(50) + '\n\n';
+
+    // Collect in DOM order
+    var allWidgets = document.querySelectorAll('[data-note-id]');
+    allWidgets.forEach(function(w) {
+      var id = w.getAttribute('data-note-id');
+      var label = w.getAttribute('data-note-label');
+      if (notes[id] && notes[id].trim()) {
+        text += '--- ' + label + ' ---\n';
+        text += notes[id] + '\n\n';
+      }
+    });
+
+    var blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'humapubli-anotacoes-' + new Date().toISOString().split('T')[0] + '.txt';
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  // ── Clear all ──
+  window.clearAllNotes = function() {
+    if (confirm('Tem certeza que quer limpar TODAS as anotacoes? Isso nao pode ser desfeito.')) {
+      localStorage.removeItem(STORAGE_KEY);
+      location.reload();
+    }
+  };
+})();
+</script>
+
+</body>
+</html>
