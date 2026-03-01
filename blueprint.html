@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>humaPubli — Blueprint Operacional</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   :root {
     --bg: #0a0a0a;
@@ -222,6 +223,56 @@
   }
   .note-saved.show { opacity: 1; }
 
+  /* Other users' notes */
+  .other-notes { margin-top: 0.6rem; }
+  .other-note {
+    background: rgba(155,89,232,0.06); border: 1px solid rgba(155,89,232,0.15);
+    border-radius: 8px; padding: 0.6rem 0.8rem; margin-top: 0.4rem;
+  }
+  .other-note-header {
+    display: flex; align-items: center; gap: 0.4rem; margin-bottom: 0.3rem;
+  }
+  .other-note-author {
+    font-size: 0.7rem; font-weight: 700; color: var(--purple);
+    text-transform: uppercase; letter-spacing: 0.05em;
+  }
+  .other-note-time {
+    font-size: 0.6rem; color: var(--text-dim);
+  }
+  .other-note-text {
+    font-size: 0.8rem; color: var(--text-muted); line-height: 1.5;
+    white-space: pre-wrap;
+  }
+
+  /* User name modal */
+  .user-modal-overlay {
+    position: fixed; inset: 0; z-index: 9999;
+    background: rgba(0,0,0,0.85); backdrop-filter: blur(10px);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .user-modal {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 2rem; max-width: 380px; width: 90%;
+    text-align: center;
+  }
+  .user-modal h3 {
+    font-family: 'Montserrat', sans-serif; margin-bottom: 0.5rem;
+  }
+  .user-modal p { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem; }
+  .user-modal input {
+    width: 100%; padding: 0.7rem 1rem; border-radius: 8px;
+    border: 1px solid var(--border); background: var(--bg);
+    color: var(--text); font-family: 'Inter', sans-serif; font-size: 1rem;
+    text-align: center; outline: none; margin-bottom: 1rem;
+  }
+  .user-modal input:focus { border-color: var(--pink); }
+  .user-modal button {
+    width: 100%; padding: 0.7rem; border-radius: 8px; border: none;
+    background: var(--gradient); color: white; font-family: 'Inter', sans-serif;
+    font-weight: 600; font-size: 0.9rem; cursor: pointer;
+  }
+  .user-modal button:disabled { opacity: 0.4; cursor: not-allowed; }
+
   /* Export bar */
   .export-bar {
     position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
@@ -242,6 +293,49 @@
   .export-btn:hover { border-color: var(--orange); background: rgba(245,158,63,0.08); }
   .export-btn.danger { border-color: rgba(255,68,68,0.3); color: var(--red); }
   .export-btn.danger:hover { background: rgba(255,68,68,0.08); }
+  .export-btn.primary { border-color: var(--pink); color: var(--pink); }
+  .export-btn.primary:hover { background: rgba(232,57,160,0.1); }
+
+  /* Print / PDF styles */
+  @media print {
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; }
+    body { background: var(--bg) !important; }
+    nav, .export-bar { display: none !important; }
+    section { padding: 1.5rem 0 1rem !important; page-break-inside: avoid; }
+    section:first-of-type { padding-top: 2rem !important; }
+    .divider { margin: 1.5rem 0 !important; }
+    h2 { page-break-after: avoid; }
+    .card, .question-box, .decision-box, .resolved-box { page-break-inside: avoid; }
+    .flow { page-break-inside: avoid; }
+
+    /* Notes: hide toggle button, show content directly */
+    .note-toggle { display: none !important; }
+    .note-area { display: none !important; }
+    .note-wrapper.has-print-content .note-area { display: block !important; }
+    .note-wrapper.has-print-content {
+      margin-top: 0.8rem !important; margin-bottom: 1.5rem !important;
+      padding-top: 0.6rem !important;
+      border-top: 1px dashed rgba(245,158,63,0.3) !important;
+    }
+    .note-wrapper.has-print-content::before {
+      content: attr(data-note-label) ' — Anotacao';
+      display: block; font-size: 0.65rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      color: var(--orange); margin-bottom: 0.3rem;
+    }
+    .note-area textarea {
+      border: none !important; background: rgba(245,158,63,0.06) !important;
+      padding: 0.5rem 0.7rem !important; min-height: auto !important;
+      height: auto !important; overflow: visible !important;
+      resize: none !important; font-size: 0.8rem !important;
+    }
+    /* Show other users' notes in print */
+    .other-notes { display: block !important; }
+    .other-note { page-break-inside: avoid; }
+    /* Hide empty note wrappers */
+    .note-wrapper:not(.has-print-content) { display: none !important; }
+    .user-modal-overlay { display: none !important; }
+  }
 
   /* Responsive */
   @media (max-width: 768px) {
@@ -1003,34 +1097,125 @@
     <span id="note-count">0</span> anotacoes salvas
   </div>
   <div class="actions">
-    <button class="export-btn" onclick="exportNotes()">Exportar anotacoes</button>
+    <button class="export-btn primary" onclick="generatePDF()">Gerar PDF</button>
+    <button class="export-btn" onclick="exportNotes()">Exportar .txt</button>
     <button class="export-btn danger" onclick="clearAllNotes()">Limpar tudo</button>
   </div>
 </div>
 
 <script>
 (function() {
-  var STORAGE_KEY = 'humapubli-blueprint-notes';
+  // ── Supabase config ──
+  var SUPABASE_URL = 'https://hlbpvdyxrqsmdcvecgsp.supabase.co';
+  var SUPABASE_KEY = 'sb_publishable_3K2Npk33ZvsE5zgeblc5xg_cPKlErdR';
+  var sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  var USER_KEY = 'humapubli-blueprint-user';
+  var currentUser = localStorage.getItem(USER_KEY) || '';
+  var allNotes = []; // cached from Supabase
 
-  function loadNotes() {
-    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); }
-    catch(e) { return {}; }
+  // ── User name modal ──
+  function ensureUser(callback) {
+    if (currentUser) { callback(); return; }
+    var overlay = document.createElement('div');
+    overlay.className = 'user-modal-overlay';
+    overlay.innerHTML =
+      '<div class="user-modal">' +
+        '<h3>Bem-vindo ao Blueprint</h3>' +
+        '<p>Como voce quer ser identificado nas anotacoes?</p>' +
+        '<input type="text" id="user-name-input" placeholder="Seu nome" autofocus>' +
+        '<button id="user-name-btn" disabled>Entrar</button>' +
+      '</div>';
+    document.body.appendChild(overlay);
+    var input = document.getElementById('user-name-input');
+    var btn = document.getElementById('user-name-btn');
+    input.addEventListener('input', function() {
+      btn.disabled = !this.value.trim();
+    });
+    input.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' && this.value.trim()) confirm();
+    });
+    btn.addEventListener('click', confirm);
+    function confirm() {
+      currentUser = input.value.trim();
+      localStorage.setItem(USER_KEY, currentUser);
+      overlay.remove();
+      callback();
+    }
+    setTimeout(function() { input.focus(); }, 100);
   }
 
-  function saveNotes(notes) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(notes));
-    updateCount();
+  // ── Supabase CRUD ──
+  async function fetchAllNotes() {
+    var { data } = await sb.from('blueprint_notes').select('*');
+    allNotes = data || [];
+    return allNotes;
   }
 
+  async function upsertNote(noteId, content) {
+    var { error } = await sb.from('blueprint_notes').upsert({
+      note_id: noteId,
+      user_name: currentUser,
+      content: content
+    }, { onConflict: 'note_id,user_name' });
+    if (error) console.error('Save error:', error);
+  }
+
+  // ── Count ──
   function updateCount() {
-    var notes = loadNotes();
-    var count = Object.values(notes).filter(function(v) { return v.trim(); }).length;
+    var count = allNotes.filter(function(n) { return n.content && n.content.trim(); }).length;
     document.getElementById('note-count').textContent = count;
   }
 
+  // ── Render other users' notes ──
+  function renderOtherNotes(wrapper, noteId) {
+    var container = wrapper.querySelector('.other-notes');
+    if (!container) {
+      container = document.createElement('div');
+      container.className = 'other-notes';
+      wrapper.querySelector('.note-area').appendChild(container);
+    }
+    container.innerHTML = '';
+    var others = allNotes.filter(function(n) {
+      return n.note_id === noteId && n.user_name !== currentUser && n.content && n.content.trim();
+    });
+    others.forEach(function(n) {
+      var div = document.createElement('div');
+      div.className = 'other-note';
+      var ago = timeAgo(n.updated_at);
+      div.innerHTML =
+        '<div class="other-note-header">' +
+          '<span class="other-note-author">' + escapeHtml(n.user_name) + '</span>' +
+          '<span class="other-note-time">' + ago + '</span>' +
+        '</div>' +
+        '<div class="other-note-text">' + escapeHtml(n.content) + '</div>';
+      container.appendChild(div);
+    });
+  }
+
+  function escapeHtml(str) {
+    var d = document.createElement('div');
+    d.textContent = str;
+    return d.innerHTML;
+  }
+
+  function timeAgo(dateStr) {
+    var diff = Date.now() - new Date(dateStr).getTime();
+    var mins = Math.floor(diff / 60000);
+    if (mins < 1) return 'agora';
+    if (mins < 60) return mins + 'min atras';
+    var hrs = Math.floor(mins / 60);
+    if (hrs < 24) return hrs + 'h atras';
+    var days = Math.floor(hrs / 24);
+    return days + 'd atras';
+  }
+
+  // ── Create note widget ──
   function createNoteWidget(id, label) {
-    var notes = loadNotes();
-    var saved = notes[id] || '';
+    var myNote = allNotes.find(function(n) { return n.note_id === id && n.user_name === currentUser; });
+    var saved = myNote ? myNote.content : '';
+    var othersExist = allNotes.some(function(n) {
+      return n.note_id === id && n.user_name !== currentUser && n.content && n.content.trim();
+    });
 
     var wrapper = document.createElement('div');
     wrapper.className = 'note-wrapper';
@@ -1038,35 +1223,49 @@
     wrapper.setAttribute('data-note-label', label);
 
     var toggle = document.createElement('button');
-    toggle.className = 'note-toggle' + (saved ? ' has-content' : '');
-    toggle.innerHTML = '<span class="note-icon">✏️</span> ' +
-      (saved ? 'Minha anotacao — ' + label : 'Anotar — ' + label) +
-      '<span class="note-saved" id="saved-' + id + '">salvo</span>';
+    var hasAny = saved || othersExist;
+    toggle.className = 'note-toggle' + (hasAny ? ' has-content' : '');
+
+    function toggleLabel(hasMine, hasOthers) {
+      var icon = hasMine ? '✏️' : (hasOthers ? '💬' : '✏️');
+      var text = hasMine ? 'Anotacoes — ' + label : (hasOthers ? 'Ver anotacoes — ' + label : 'Anotar — ' + label);
+      return '<span class="note-icon">' + icon + '</span> ' + text +
+        '<span class="note-saved" id="saved-' + id + '">salvo</span>';
+    }
+    toggle.innerHTML = toggleLabel(!!saved, othersExist);
 
     var area = document.createElement('div');
-    area.className = 'note-area' + (saved ? ' open' : '');
+    area.className = 'note-area' + ((saved || othersExist) ? ' open' : '');
 
     var textarea = document.createElement('textarea');
-    textarea.placeholder = 'Suas anotacoes sobre ' + label + '...';
+    textarea.placeholder = currentUser + ', suas anotacoes sobre ' + label + '...';
     textarea.value = saved;
 
     var saveTimeout;
     textarea.addEventListener('input', function() {
       var val = this.value;
-      var allNotes = loadNotes();
-      allNotes[id] = val;
-      saveNotes(allNotes);
+      // Update local cache
+      var existing = allNotes.find(function(n) { return n.note_id === id && n.user_name === currentUser; });
+      if (existing) { existing.content = val; }
+      else { allNotes.push({ note_id: id, user_name: currentUser, content: val, updated_at: new Date().toISOString() }); }
 
-      toggle.className = 'note-toggle' + (val.trim() ? ' has-content' : '');
-      toggle.innerHTML = '<span class="note-icon">✏️</span> ' +
-        (val.trim() ? 'Minha anotacao — ' + label : 'Anotar — ' + label) +
-        '<span class="note-saved show" id="saved-' + id + '">salvo</span>';
+      var hasOthers = allNotes.some(function(n) {
+        return n.note_id === id && n.user_name !== currentUser && n.content && n.content.trim();
+      });
+      toggle.className = 'note-toggle' + ((val.trim() || hasOthers) ? ' has-content' : '');
+      toggle.innerHTML = toggleLabel(!!val.trim(), hasOthers);
+      var indicator = document.getElementById('saved-' + id);
+      if (indicator) indicator.classList.add('show');
+
+      updateCount();
 
       clearTimeout(saveTimeout);
       saveTimeout = setTimeout(function() {
-        var indicator = document.getElementById('saved-' + id);
-        if (indicator) indicator.classList.remove('show');
-      }, 1500);
+        upsertNote(id, val).then(function() {
+          var ind = document.getElementById('saved-' + id);
+          setTimeout(function() { if (ind) ind.classList.remove('show'); }, 1000);
+        });
+      }, 800);
     });
 
     toggle.addEventListener('click', function() {
@@ -1085,108 +1284,97 @@
     wrapper.style.paddingTop = '0.8rem';
     wrapper.style.borderTop = '1px dashed rgba(255,255,255,0.06)';
 
+    // Render other users' notes
+    renderOtherNotes(wrapper, id);
+
     return wrapper;
   }
 
-  // ── Place notes at the end of each subsection ──
+  // ── Place widgets in subsections ──
+  function buildWidgets() {
+    var sections = document.querySelectorAll('section[id]');
+    sections.forEach(function(sec) {
+      var h2 = sec.querySelector('h2');
+      if (!h2) return;
+      var secMatch = h2.textContent.match(/^(\d+)\./);
+      var secNum = secMatch ? secMatch[1] : sec.id;
+      var h3s = sec.querySelectorAll('h3');
 
-  var sections = document.querySelectorAll('section[id]');
-
-  sections.forEach(function(sec) {
-    var secId = sec.id;
-    var h2 = sec.querySelector('h2');
-    if (!h2) return;
-
-    // Extract section number from h2 text
-    var secMatch = h2.textContent.match(/^(\d+)\./);
-    var secNum = secMatch ? secMatch[1] : secId;
-
-    // Find all h3 within this section (direct children only conceptually)
-    var h3s = sec.querySelectorAll('h3');
-
-    if (h3s.length > 0) {
-      // Process each h3 subsection
-      for (var i = 0; i < h3s.length; i++) {
-        var h3 = h3s[i];
-
-        // Extract subsection label
-        var subMatch = h3.textContent.match(/^(\d+\.\d+)/);
-        var subLabel = subMatch ? subMatch[1] : secNum + '.' + (i + 1);
-        var subTitle = h3.textContent
-          .replace(/^(\d+\.\d+)\s*/, '')
-          .replace(/^[^\w\s]*\s*/, '')
-          .replace(/\s*[^\w\s\(\)áéíóúãõçÁÉÍÓÚÃÕÇ,\-]*$/, '')
-          .trim();
-        var displayLabel = subLabel + ' ' + subTitle;
-
-        // Find the last element before the next h3 (or end of section)
-        var boundary = h3s[i + 1] || null;
-        var lastEl = h3;
-        var sibling = h3.nextElementSibling;
-        while (sibling && sibling !== boundary) {
-          lastEl = sibling;
-          sibling = sibling.nextElementSibling;
+      if (h3s.length > 0) {
+        for (var i = 0; i < h3s.length; i++) {
+          var h3 = h3s[i];
+          var subMatch = h3.textContent.match(/^(\d+\.\d+)/);
+          var subLabel = subMatch ? subMatch[1] : secNum + '.' + (i + 1);
+          var subTitle = h3.textContent.replace(/^(\d+\.\d+)\s*/, '').replace(/^[^\w\s]*\s*/, '').replace(/\s*[^\w\s\(\)\u00e1\u00e9\u00ed\u00f3\u00fa\u00e3\u00f5\u00e7,\-]*$/, '').trim();
+          var displayLabel = subLabel + ' ' + subTitle;
+          var boundary = h3s[i + 1] || null;
+          var lastEl = h3;
+          var sib = h3.nextElementSibling;
+          while (sib && sib !== boundary) { lastEl = sib; sib = sib.nextElementSibling; }
+          var noteId = 'sub-' + subLabel.replace(/\./g, '-');
+          lastEl.insertAdjacentElement('afterend', createNoteWidget(noteId, displayLabel));
         }
-
-        // Insert note after this subsection
-        var noteId = 'sub-' + subLabel.replace(/\./g, '-');
-        var widget = createNoteWidget(noteId, displayLabel);
-        lastEl.insertAdjacentElement('afterend', widget);
-      }
-
-      // Check for content BEFORE first h3 (intro, premissas, etc.)
-      var firstH3 = h3s[0];
-      var hasPreContent = false;
-      var lastPreEl = null;
-      var node = h2.nextElementSibling;
-      while (node && node !== firstH3) {
-        if (node.nodeType === 1 && !node.classList.contains('note-wrapper')) {
-          hasPreContent = true;
-          lastPreEl = node;
+        // Pre-h3 content
+        var firstH3 = h3s[0];
+        var lastPreEl = null;
+        var node = h2.nextElementSibling;
+        while (node && node !== firstH3) {
+          if (node.nodeType === 1 && !node.classList.contains('note-wrapper')) lastPreEl = node;
+          node = node.nextElementSibling;
         }
-        node = node.nextElementSibling;
+        if (lastPreEl) {
+          lastPreEl.insertAdjacentElement('afterend', createNoteWidget('sec-' + secNum + '-intro', secNum + '. Intro / Premissas'));
+        }
+      } else {
+        var secTitle = h2.textContent.replace(/^\d+\.\s*/, '').replace(/\s*[^\w\s \u00e1\u00e9\u00ed\u00f3\u00fa\u00e3\u00f5\u00e7].*$/, '').trim();
+        sec.appendChild(createNoteWidget('sec-' + secNum, secNum + '. ' + secTitle));
       }
-      if (hasPreContent && lastPreEl) {
-        var preId = 'sec-' + secNum + '-intro';
-        var preLabel = secNum + '. Intro / Premissas';
-        var preWidget = createNoteWidget(preId, preLabel);
-        lastPreEl.insertAdjacentElement('afterend', preWidget);
-      }
+    });
+    updateCount();
+  }
 
-    } else {
-      // No h3s — section without subsections (§2, §5, etc.)
-      // Add one note at the very end of the section
-      var secTitle = h2.textContent
-        .replace(/^\d+\.\s*/, '')
-        .replace(/\s*[^\w\s áéíóúãõçÁÉÍÓÚÃÕÇ].*$/, '')
-        .trim();
-      var noteId2 = 'sec-' + secNum;
-      var displayLabel2 = secNum + '. ' + secTitle;
-      var widget2 = createNoteWidget(noteId2, displayLabel2);
-      sec.appendChild(widget2);
-    }
-  });
-
-  updateCount();
+  // ── Real-time subscription ──
+  function subscribeRealtime() {
+    sb.channel('blueprint-notes-changes')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'blueprint_notes' }, function(payload) {
+        var row = payload.new;
+        if (!row || row.user_name === currentUser) return;
+        // Update local cache
+        var idx = allNotes.findIndex(function(n) { return n.note_id === row.note_id && n.user_name === row.user_name; });
+        if (idx >= 0) allNotes[idx] = row; else allNotes.push(row);
+        // Re-render that widget's other notes
+        var wrapper = document.querySelector('[data-note-id="' + row.note_id + '"]');
+        if (wrapper) {
+          renderOtherNotes(wrapper, row.note_id);
+          // Update toggle state
+          var toggle = wrapper.querySelector('.note-toggle');
+          if (toggle) toggle.classList.add('has-content');
+        }
+        updateCount();
+      })
+      .subscribe();
+  }
 
   // ── Export ──
   window.exportNotes = function() {
-    var notes = loadNotes();
-    var filled = Object.entries(notes).filter(function(e) { return e[1].trim(); });
+    var filled = allNotes.filter(function(n) { return n.content && n.content.trim(); });
     if (filled.length === 0) { alert('Nenhuma anotacao pra exportar.'); return; }
 
     var text = 'humaPubli — Blueprint Operacional — Anotacoes\n';
     text += 'Exportado em: ' + new Date().toLocaleString('pt-BR') + '\n';
     text += '='.repeat(50) + '\n\n';
 
-    // Collect in DOM order
     var allWidgets = document.querySelectorAll('[data-note-id]');
     allWidgets.forEach(function(w) {
-      var id = w.getAttribute('data-note-id');
+      var nid = w.getAttribute('data-note-id');
       var label = w.getAttribute('data-note-label');
-      if (notes[id] && notes[id].trim()) {
-        text += '--- ' + label + ' ---\n';
-        text += notes[id] + '\n\n';
+      var sectionNotes = allNotes.filter(function(n) { return n.note_id === nid && n.content && n.content.trim(); });
+      if (sectionNotes.length > 0) {
+        text += '=== ' + label + ' ===\n';
+        sectionNotes.forEach(function(n) {
+          text += '[' + n.user_name + '] ' + n.content + '\n';
+        });
+        text += '\n';
       }
     });
 
@@ -1199,13 +1387,44 @@
     URL.revokeObjectURL(url);
   };
 
-  // ── Clear all ──
-  window.clearAllNotes = function() {
-    if (confirm('Tem certeza que quer limpar TODAS as anotacoes? Isso nao pode ser desfeito.')) {
-      localStorage.removeItem(STORAGE_KEY);
-      location.reload();
-    }
+  // ── Generate PDF ──
+  window.generatePDF = function() {
+    document.querySelectorAll('[data-note-id]').forEach(function(w) {
+      var nid = w.getAttribute('data-note-id');
+      var hasAny = allNotes.some(function(n) { return n.note_id === nid && n.content && n.content.trim(); });
+      if (hasAny) {
+        w.classList.add('has-print-content');
+        var area = w.querySelector('.note-area');
+        if (area) area.classList.add('open');
+        var ta = w.querySelector('textarea');
+        if (ta) { ta.style.height = 'auto'; ta.style.height = ta.scrollHeight + 'px'; }
+      } else {
+        w.classList.remove('has-print-content');
+      }
+    });
+    setTimeout(function() { window.print(); }, 200);
   };
+
+  // ── Clear my notes ──
+  window.clearAllNotes = function() {
+    if (!confirm('Limpar TODAS as suas anotacoes (' + currentUser + ')? Isso nao pode ser desfeito.')) return;
+    sb.from('blueprint_notes').delete().eq('user_name', currentUser).then(function() {
+      allNotes = allNotes.filter(function(n) { return n.user_name !== currentUser; });
+      location.reload();
+    });
+  };
+
+  // ── Init ──
+  ensureUser(function() {
+    // Show current user in stats bar
+    var statsEl = document.querySelector('.export-bar .stats');
+    statsEl.innerHTML = '<span id="note-count">0</span> anotacoes &middot; logado como <strong style="color:var(--pink)">' + escapeHtml(currentUser) + '</strong>';
+
+    fetchAllNotes().then(function() {
+      buildWidgets();
+      subscribeRealtime();
+    });
+  });
 })();
 </script>
 
